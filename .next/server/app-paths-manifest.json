@@ -1,0 +1,12 @@
+{
+  "/page": "app/page.js",
+  "/api/about/route": "app/api/about/route.js",
+  "/api/skills/route": "app/api/skills/route.js",
+  "/api/projects/route": "app/api/projects/route.js",
+  "/api/achievements/route": "app/api/achievements/route.js",
+  "/api/education/route": "app/api/education/route.js",
+  "/api/blog/route": "app/api/blog/route.js",
+  "/api/social/route": "app/api/social/route.js",
+  "/admin/dashboard/page": "app/admin/dashboard/page.js",
+  "/admin/login/page": "app/admin/login/page.js"
+}
