@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🎨 iOS 16 Style Portfolio Web App
 
 A premium, fully responsive portfolio web application with glassmorphism design, admin dashboard, and MongoDB integration.
@@ -27,3 +28,7 @@ A premium, fully responsive portfolio web application with glassmorphism design,
 ```bash
 git clone <your-repo-url>
 cd portfolio-app
+=======
+# Portfolio
+This is My Portfolio website.
+>>>>>>> 4aa62830767639a285647a87ddb8a179056fde91
