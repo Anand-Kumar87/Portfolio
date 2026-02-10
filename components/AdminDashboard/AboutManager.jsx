@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { FiSave } from 'react-icons/fi';
 import toast from 'react-hot-toast';
-import { getAuthHeaders } from '@/lib/utils';
 
 export default function AboutManager() {
   const [aboutData, setAboutData] = useState({
@@ -36,9 +35,13 @@ export default function AboutManager() {
     setLoading(true);
 
     try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       const response = await fetch('/api/about', {
         method: 'PUT',
-        headers: getAuthHeaders(),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
         body: JSON.stringify(aboutData),
       });
 

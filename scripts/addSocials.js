@@ -16,9 +16,9 @@ async function addSocials() {
     console.log('✅ Connected to MongoDB');
 
     const socials = [
-      { platform: 'github', url: 'https://github.com/yourusername', order: 1 },
-      { platform: 'linkedin', url: 'https://linkedin.com/in/yourusername', order: 2 },
-      { platform: 'twitter', url: 'https://twitter.com/yourusername', order: 3 },
+      { platform: 'github', url: 'https://github.com/Anand-Kumar87', order: 1 },
+      { platform: 'linkedin', url: 'https://www.linkedin.com/in/anand-kumar-270533346/', order: 2 },
+      { platform: 'twitter', url: 'https://x.com/SoleStyle238051', order: 3 },
       { platform: 'email', url: 'mailto:solestyle41@gmail.com', order: 4 },
       { platform: 'whatsapp', url: 'https://wa.me/8726540277', order: 5 },
     ];
