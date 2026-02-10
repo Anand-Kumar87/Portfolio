@@ -5,6 +5,8 @@ import Link from 'next/link';
 import connectDB from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 
+export const dynamic = 'force-dynamic';
+
 async function getBlogPosts() {
   await connectDB();
   const posts = await Blog.find({ published: true })

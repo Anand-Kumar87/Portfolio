@@ -11,8 +11,11 @@ export default function Achievements() {
   useEffect(() => {
     fetch('/api/achievements')
       .then((res) => res.json())
-      .then((data) => setAchievements(data))
-      .catch((error) => console.error('Error fetching achievements:', error));
+      .then((data) => setAchievements(Array.isArray(data) ? data : []))
+      .catch((error) => {
+        console.error('Error fetching achievements:', error);
+        setAchievements([]);
+      });
   }, []);
 
   return (

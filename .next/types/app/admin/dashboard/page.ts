@@ -1,4 +1,4 @@
-// File: /mnt/d/portfolio-app/app/admin/dashboard/page.jsx
+// File: /mnt/d/ALL Files/portfolio-app/app/admin/dashboard/page.jsx
 import * as entry from '../../../../../app/admin/dashboard/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

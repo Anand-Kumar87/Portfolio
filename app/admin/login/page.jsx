@@ -14,6 +14,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
+      console.log('Attempting login with:', credentials.username);
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -21,17 +22,22 @@ export default function AdminLogin() {
       });
 
       const data = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response data:', data);
 
       if (response.ok) {
         localStorage.setItem('token', data.token);
         toast.success('Login successful!');
         router.push('/admin/dashboard');
       } else {
-        toast.error(data.error || 'Login failed');
+        const errorMsg = data.error || data.message || 'Login failed';
+        toast.error(errorMsg);
+        console.error('Login failed:', errorMsg);
       }
     } catch (error) {
-      toast.error('Connection error');
-      console.error(error);
+      const errorMsg = 'Connection error: ' + error.message;
+      toast.error(errorMsg);
+      console.error('Login error:', error);
     } finally {
       setLoading(false);
     }

@@ -6,6 +6,8 @@ import connectDB from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 async function getPost(slug) {
   await connectDB();
   const post = await Blog.findOne({ slug, published: true }).lean();

@@ -139,7 +139,11 @@ export default function SkillsDashboard() {
     fetch('/api/skills')
       .then(res => res.json())
       .then(data => {
-        setSkills(data);
+        setSkills(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setSkills([]);
         setLoading(false);
       });
   }, []);

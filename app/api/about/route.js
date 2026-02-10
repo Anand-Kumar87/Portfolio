@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb';
 import About from '@/models/About';
 import { verifyToken, getAuthToken } from '@/lib/auth';
 
+export const runtime = 'nodejs';
+
 export async function GET() {
   try {
     await connectDB();
@@ -13,7 +15,7 @@ export async function GET() {
   }
 }
 
-export async function PUT(request) {
+export async function POST(request) {
   try {
     const token = getAuthToken(request);
     if (!token || !verifyToken(token)) {
@@ -34,4 +36,8 @@ export async function PUT(request) {
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update about' }, { status: 500 });
   }
+}
+
+export async function PUT(request) {
+  return POST(request);
 }

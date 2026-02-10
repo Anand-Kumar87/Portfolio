@@ -71,7 +71,8 @@ export default function AnimatedTimeline() {
   useEffect(() => {
     fetch('/api/education')
       .then(res => res.json())
-      .then(data => setEducation(data));
+      .then(data => setEducation(Array.isArray(data) ? data : []))
+      .catch(() => setEducation([]));
   }, []);
 
   return (

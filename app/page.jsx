@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import ModernNavbar from '@/components/ModernNavbar';
 import ModernHero from '@/components/ModernHero';
 import About from '@/components/About';
@@ -9,8 +10,9 @@ import Blog from '@/components/Blog';
 import EnhancedContact from '@/components/EnhancedContact';
 import SocialFloating from '@/components/SocialFloating';
 import Footer from '@/components/Footer';
-import ParticleBackground from '@/components/ParticleBackground';
 import ScrollProgress from '@/components/ScrollProgress';
+
+const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
 
 export default function Home() {
   return (

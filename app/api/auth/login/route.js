@@ -5,8 +5,12 @@ import { verifyPassword, generateToken } from '@/lib/auth';
 
 export async function POST(request) {
   try {
+    console.log('Login attempt started');
     await connectDB();
+    console.log('DB connected');
+    
     const { username, password } = await request.json();
+    console.log('Login attempt for username:', username);
 
     if (!username || !password) {
       return NextResponse.json(
@@ -16,19 +20,21 @@ export async function POST(request) {
     }
 
     const user = await User.findOne({ username });
+    console.log('User found:', !!user);
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid credentials' },
+        { error: 'Invalid credentials - user not found' },
         { status: 401 }
       );
     }
 
     const isValid = await verifyPassword(password, user.password);
+    console.log('Password valid:', isValid);
 
     if (!isValid) {
       return NextResponse.json(
-        { error: 'Invalid credentials' },
+        { error: 'Invalid credentials - wrong password' },
         { status: 401 }
       );
     }

@@ -2,7 +2,8 @@
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { FiSun, FiMoon, FiMenu, FiX, FiGlobe, FiDownload, FiMail } from 'react-icons/fi';
+import { FiSun, FiMoon, FiMenu, FiX, FiGlobe, FiDownload, FiMail, FiLock, FiLogOut } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
@@ -105,9 +106,26 @@ export default function ModernNavbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { scrollY } = useScroll();
+  const router = useRouter();
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    // Check login status only on client
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      setIsLoggedIn(!!token);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      router.push('/');
+    }
+  };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
@@ -185,6 +203,39 @@ export default function ModernNavbar() {
               >
                 {theme === 'dark' ? <FiSun size={18} /> : <FiMoon size={18} />}
               </motion.button>
+
+              {isLoggedIn ? (
+                <>
+                  <motion.button
+                    onClick={() => router.push('/admin/dashboard')}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2 glass dark:glass-dark rounded-full font-medium"
+                  >
+                    <FiLock size={16} />
+                    Admin Panel
+                  </motion.button>
+                  <motion.button
+                    onClick={handleLogout}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center gap-2 px-4 py-2 bg-red-500/20 text-red-500 rounded-full font-medium"
+                  >
+                    <FiLogOut size={16} />
+                    Logout
+                  </motion.button>
+                </>
+              ) : (
+                <motion.button
+                  onClick={() => router.push('/admin/login')}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center gap-2 px-4 py-2 glass dark:glass-dark rounded-full font-medium"
+                >
+                  <FiLock size={16} />
+                  Admin Login
+                </motion.button>
+              )}
 
               <motion.a
                 href="#contact"
@@ -277,6 +328,48 @@ export default function ModernNavbar() {
                     {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                   </span>
                 </motion.button>
+
+                {isLoggedIn ? (
+                  <>
+                    <motion.button
+                      onClick={() => {
+                        setIsOpen(false);
+                        router.push('/admin/dashboard');
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center gap-3 py-3 px-4 glass dark:glass-dark rounded-lg font-medium"
+                    >
+                      <FiLock size={20} />
+                      <span>Admin Panel</span>
+                    </motion.button>
+                    <motion.button
+                      onClick={() => {
+                        setIsOpen(false);
+                        handleLogout();
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full flex items-center gap-3 py-3 px-4 bg-red-500/20 text-red-500 rounded-lg font-medium"
+                    >
+                      <FiLogOut size={20} />
+                      <span>Logout</span>
+                    </motion.button>
+                  </>
+                ) : (
+                  <motion.button
+                    onClick={() => {
+                      setIsOpen(false);
+                      router.push('/admin/login');
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center gap-3 py-3 px-4 glass dark:glass-dark rounded-lg font-medium"
+                  >
+                    <FiLock size={20} />
+                    <span>Admin Login</span>
+                  </motion.button>
+                )}
 
                 <motion.a
                   href="/resume.pdf"

@@ -37,7 +37,7 @@ export default function AboutManager() {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       const response = await fetch('/api/about', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(token && { Authorization: `Bearer ${token}` }),

@@ -14,10 +14,14 @@ export default function Blog() {
       .then((res) => res.json())
       .then((data) => {
         // Only show published posts
-        const published = data.filter((post) => post.published);
+        const dataArray = Array.isArray(data) ? data : [];
+        const published = dataArray.filter((post) => post.published);
         setPosts(published.slice(0, 3)); // Show latest 3 posts
       })
-      .catch((error) => console.error('Error fetching blog posts:', error));
+      .catch((error) => {
+        console.error('Error fetching blog posts:', error);
+        setPosts([]);
+      });
   }, []);
 
   if (posts.length === 0) return null;

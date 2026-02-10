@@ -10,19 +10,33 @@ import { FiLogOut, FiHome } from 'react-icons/fi';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('about');
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/admin/login');
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/admin/login');
+      }
     }
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.push('/admin/login');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token');
+      router.push('/admin/login');
+    }
   };
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-xl text-white">Loading...</div>
+      </div>
+    );
+  }
 
   const tabs = [
     { id: 'about', label: 'About' },

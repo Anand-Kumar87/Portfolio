@@ -1,4 +1,4 @@
-// File: /mnt/d/portfolio-app/app/api/projects/route.js
+// File: /mnt/d/ALL Files/portfolio-app/app/api/projects/route.js
 import * as entry from '../../../../../app/api/projects/route.js'
 import type { NextRequest } from 'next/server.js'
 

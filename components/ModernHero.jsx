@@ -75,7 +75,11 @@ export default function ModernHero() {
       fetch('/api/skills').then(res => res.json())
     ]).then(([about, skillsData]) => {
       setAboutData(about);
-      setSkills(skillsData.slice(0, 6));
+      const skillsArray = Array.isArray(skillsData) ? skillsData : [];
+      setSkills(skillsArray.slice(0, 6));
+    }).catch(() => {
+      setAboutData({});
+      setSkills([]);
     });
   }, []);
 

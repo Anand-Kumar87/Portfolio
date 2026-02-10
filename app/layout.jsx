@@ -1,9 +1,8 @@
-import { Inter } from 'next/font/google';
 import './globals.css';
+import dynamic from 'next/dynamic';
 import { Providers } from '@/components/Providers';
-import LoadingScreen from '@/components/LoadingScreen';
 
-const inter = Inter({ subsets: ['latin'] });
+const LoadingScreen = dynamic(() => import('@/components/LoadingScreen'), { ssr: false });
 
 export const metadata = {
   title: 'My Portfolio - Full Stack Developer',
@@ -13,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className="font-sans" suppressHydrationWarning>
         <Providers>
           <LoadingScreen />
           {children}

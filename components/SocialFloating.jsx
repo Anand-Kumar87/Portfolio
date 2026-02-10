@@ -10,7 +10,8 @@ export default function SocialFloating() {
   useEffect(() => {
     fetch('/api/social')
       .then((res) => res.json())
-      .then((data) => setSocials(data));
+      .then((data) => setSocials(Array.isArray(data) ? data : []))
+      .catch(() => setSocials([]));
   }, []);
 
   const iconMap = {
