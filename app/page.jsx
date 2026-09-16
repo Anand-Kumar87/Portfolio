@@ -13,12 +13,14 @@ import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
 
 const ParticleBackground = dynamic(() => import('@/components/ParticleBackground'), { ssr: false });
+const Scroll3DScene = dynamic(() => import('@/components/Scroll3DScene'), { ssr: false });
 
 export default function Home() {
   return (
     <>
       <ScrollProgress />
       <ParticleBackground />
+      <Scroll3DScene />
       <ModernNavbar />
       <main className="min-h-screen relative z-10">
         <section id="home">

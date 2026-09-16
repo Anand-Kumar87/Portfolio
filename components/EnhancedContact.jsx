@@ -135,7 +135,7 @@ export default function EnhancedContact() {
   ];
 
   return (
-    <section id="contact" className="py-20 pb-36 md:pb-24">
+    <section id="contact" className="pt-20 pb-10 sm:pb-12">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

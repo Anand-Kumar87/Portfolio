@@ -197,6 +197,25 @@ const ProjectCard = ({ project, index, onSelect }) => {
 };
 
 const ProjectModal = ({ project, onClose }) => {
+  useEffect(() => {
+    if (project) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [project]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!project) return null;
 
   const modalTech = (project.technologies && project.technologies.length) 
@@ -211,52 +230,70 @@ const ProjectModal = ({ project, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/85 backdrop-blur-md z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
         onClick={onClose}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, y: 50 }}
+          initial={{ opacity: 0, scale: 0.9, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 50 }}
-          className="glass dark:glass-dark rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          exit={{ opacity: 0, scale: 0.9, y: 30 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="relative bg-white dark:bg-[#0f172a] text-gray-900 dark:text-gray-100 rounded-3xl max-w-4xl w-full max-h-[88vh] overflow-y-auto border border-gray-200 dark:border-slate-800 shadow-2xl my-auto overscroll-contain"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header */}
-          <div className="relative h-64 overflow-hidden rounded-t-3xl">
+          {/* Header Image */}
+          <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-t-3xl bg-slate-900">
             <img
               src={project.image || '/images/project-placeholder.svg'}
               alt={project.title}
               onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
               className="w-full h-full object-cover object-top"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            
+            {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 bg-black/40 backdrop-blur-sm rounded-full text-white hover:bg-black/60 transition-colors"
+              className="absolute top-4 right-4 p-2.5 bg-black/60 hover:bg-black/90 text-white rounded-full backdrop-blur-md transition-all shadow-xl hover:scale-110 z-20"
+              aria-label="Close modal"
             >
               ✕
             </button>
+
+            {/* Title overlay on image for quick identification */}
+            <div className="absolute bottom-5 left-6 right-6">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-blue-600 text-white mb-2 shadow-md">
+                {project.category || 'Featured'}
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-md">
+                {project.title}
+              </h2>
+            </div>
           </div>
 
           {/* Content */}
-          <div className="p-8">
+          <div className="p-6 sm:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Info */}
               <div className="lg:col-span-2 space-y-6">
                 <div>
-                  <h2 className="text-3xl font-bold mb-2">{project.title}</h2>
-                  <p className="text-gray-600 dark:text-gray-300">{project.description}</p>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">About Project</h3>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
+                    {project.description}
+                  </p>
                 </div>
 
                 {/* Features */}
                 {project.features && project.features.length > 0 && (
                   <div>
-                    <h3 className="text-xl font-semibold mb-3">Key Features</h3>
-                    <ul className="space-y-2">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Key Highlights</h3>
+                    <ul className="space-y-2.5">
                       {project.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-2">
+                        <li key={i} className="flex items-start gap-3">
                           <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                          <span className="text-gray-600 dark:text-gray-300">{feature}</span>
+                          <span className="text-gray-700 dark:text-gray-200 text-sm sm:text-base leading-snug">
+                            {feature}
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -265,16 +302,16 @@ const ProjectModal = ({ project, onClose }) => {
 
                 {/* Technologies */}
                 <div>
-                  <h3 className="text-xl font-semibold mb-3">Technologies Used</h3>
-                  <div className="flex flex-wrap gap-3">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Tech Stack & Tools</h3>
+                  <div className="flex flex-wrap gap-2.5">
                     {modalTech.map((tech, i) => {
                       const IconComponent = getLanguageIcon(tech);
                       return (
                         <div
                           key={i}
-                          className="flex items-center gap-2 px-3 py-2 glass dark:glass-dark rounded-lg"
+                          className="flex items-center gap-2 px-3.5 py-2 bg-gray-100 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-gray-200 text-xs sm:text-sm font-medium shadow-sm"
                         >
-                          <IconComponent size={16} />
+                          <IconComponent size={16} className="text-blue-500" />
                           <span>{tech}</span>
                         </div>
                       );
@@ -286,20 +323,23 @@ const ProjectModal = ({ project, onClose }) => {
               {/* Sidebar */}
               <div className="space-y-6">
                 {/* Project Stats */}
-                <div className="glass dark:glass-dark p-6 rounded-2xl">
-                  <h3 className="font-semibold mb-4">Project Details</h3>
-                  <div className="space-y-3">
+                <div className="bg-gray-50 dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl shadow-sm">
+                  <h3 className="font-bold text-gray-900 dark:text-white text-base mb-4">Project Overview</h3>
+                  <div className="space-y-3.5 text-sm">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-500">Status</span>
-                      <span className="font-medium capitalize">{project.status || 'Completed'}</span>
+                      <span className="text-gray-500 dark:text-gray-400">Status</span>
+                      <span className="font-semibold text-emerald-600 dark:text-emerald-400 capitalize flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        {project.status || 'Completed'}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-500">Year</span>
-                      <span className="font-medium">{project.year || '2024'}</span>
+                      <span className="text-gray-500 dark:text-gray-400">Timeline</span>
+                      <span className="font-semibold text-gray-800 dark:text-gray-200">{project.year || '2024'}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-500">Category</span>
-                      <span className="font-medium capitalize">{project.category || 'Web'}</span>
+                      <span className="text-gray-500 dark:text-gray-400">Category</span>
+                      <span className="font-semibold text-gray-800 dark:text-gray-200 capitalize">{project.category || 'Web App'}</span>
                     </div>
                   </div>
                 </div>
@@ -311,10 +351,10 @@ const ProjectModal = ({ project, onClose }) => {
                       href={modalLive}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full glow-button flex items-center justify-center gap-2"
+                      className="w-full glow-button flex items-center justify-center gap-2 py-3.5 text-sm font-semibold shadow-lg text-center"
                     >
                       <FiExternalLink size={16} />
-                      View Live Demo
+                      Open Live Project
                     </a>
                   )}
                   {modalGithub && (
@@ -322,7 +362,7 @@ const ProjectModal = ({ project, onClose }) => {
                       href={modalGithub}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full glass dark:glass-dark px-4 py-3 rounded-full font-semibold flex items-center justify-center gap-2 hover:scale-105 transition-all"
+                      className="w-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-slate-700 px-4 py-3 rounded-full font-semibold flex items-center justify-center gap-2 transition-all text-sm shadow-sm"
                     >
                       <FiGithub size={16} />
                       View Source Code
