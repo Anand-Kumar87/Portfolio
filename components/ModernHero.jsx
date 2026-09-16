@@ -274,46 +274,48 @@ export default function ModernHero() {
                 transition={{ duration: 0.3 }}
               />
 
-              {/* Floating Skills */}
-              {skills.map((skill, index) => {
-                const IconComponent = getLanguageIcon(skill.name);
-                const angle = (index * 60) * (Math.PI / 180);
-                const radius = 180;
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
+              {/* Floating Skills (Shown on large screens) */}
+              <div className="hidden lg:block">
+                {skills.map((skill, index) => {
+                  const IconComponent = getLanguageIcon(skill.name);
+                  const angle = (index * 60) * (Math.PI / 180);
+                  const radius = 180;
+                  const x = Math.cos(angle) * radius;
+                  const y = Math.sin(angle) * radius;
 
-                return (
-                  <motion.div
-                    key={skill._id}
-                    className="absolute"
-                    style={{
-                      left: `calc(50% + ${x}px)`,
-                      top: `calc(50% + ${y}px)`,
-                      transform: 'translate(-50%, -50%)'
-                    }}
-                    animate={{
-                      y: [0, -10, 0],
-                      rotate: [0, 5, -5, 0]
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      delay: index * 0.2
-                    }}
-                  >
-                    <FloatingCard delay={1.5 + index * 0.1}>
-                      <div className="flex items-center gap-2 text-sm">
-                        <IconComponent size={20} className="text-blue-500" />
-                        <span className="font-medium">{skill.name}</span>
-                      </div>
-                    </FloatingCard>
-                  </motion.div>
-                );
-              })}
+                  return (
+                    <motion.div
+                      key={skill._id}
+                      className="absolute"
+                      style={{
+                        left: `calc(50% + ${x}px)`,
+                        top: `calc(50% + ${y}px)`,
+                        transform: 'translate(-50%, -50%)'
+                      }}
+                      animate={{
+                        y: [0, -10, 0],
+                        rotate: [0, 5, -5, 0]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: index * 0.2
+                      }}
+                    >
+                      <FloatingCard delay={1.5 + index * 0.1}>
+                        <div className="flex items-center gap-2 text-sm">
+                          <IconComponent size={20} className="text-blue-500" />
+                          <span className="font-medium">{skill.name}</span>
+                        </div>
+                      </FloatingCard>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* Info Cards */}
-            <div className="absolute -bottom-10 -left-10">
+            {/* Info Cards (Responsive positioning) */}
+            <div className="hidden sm:block absolute -bottom-6 -left-6 lg:-bottom-10 lg:-left-10">
               <FloatingCard delay={2}>
                 <div className="flex items-center gap-3">
                   <FiMapPin className="text-blue-500" />
@@ -325,7 +327,7 @@ export default function ModernHero() {
               </FloatingCard>
             </div>
 
-            <div className="absolute -top-10 -right-10">
+            <div className="hidden sm:block absolute -top-6 -right-6 lg:-top-10 lg:-right-10">
               <FloatingCard delay={2.2}>
                 <div className="flex items-center gap-3">
                   <FiCalendar className="text-green-500" />

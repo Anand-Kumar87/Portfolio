@@ -61,9 +61,9 @@ const ProjectCard = ({ project, index, onSelect }) => {
             src={project.image || '/images/project-placeholder.svg'}
             alt={project.title}
             onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
-            className="w-full h-full object-cover"
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.6 }}
+            className="w-full h-full object-cover object-top"
+            whileHover={{ scale: 1.06 }}
+            transition={{ duration: 0.5 }}
           />
           
           {/* Overlay */}
@@ -227,7 +227,7 @@ const ProjectModal = ({ project, onClose }) => {
               src={project.image || '/images/project-placeholder.svg'}
               alt={project.title}
               onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-top"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
             <button
@@ -338,11 +338,53 @@ const ProjectModal = ({ project, onClose }) => {
   );
 };
 
+const defaultProjects = [
+  {
+    _id: 'default-inv',
+    title: 'Invoice Generator App',
+    description: 'A modern cloud-based invoice management platform featuring instant PDF generation, client accounting, automated balance calculations, and multi-currency formats.',
+    image: '/images/projects/invoice-generator.png',
+    technologies: ['Next.js', 'React', 'Tailwind CSS', 'PDF Engine', 'Node.js'],
+    techStack: ['Next.js', 'React', 'Tailwind CSS', 'PDF Engine', 'Node.js'],
+    category: 'Full-Stack',
+    status: 'Completed',
+    liveUrl: 'https://invoice-tau.vercel.app/',
+    githubUrl: 'https://github.com/Anand-Kumar87/invoice',
+    features: ['Automated Invoice Calculation', 'Custom Branding & Logos', 'Instant PDF Generation', 'Tax & Discount Rules']
+  },
+  {
+    _id: 'default-shoe',
+    title: 'ShoeStyle E-Commerce',
+    description: 'High-performance interactive footwear e-commerce application with dynamic product catalogs, rich filtering, smooth cart workflows, and responsive checkout.',
+    image: '/images/projects/shoe-style.png',
+    technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
+    techStack: ['React', 'Node.js', 'Express', 'MongoDB', 'Tailwind CSS'],
+    category: 'Full-Stack',
+    status: 'Completed',
+    liveUrl: 'https://shoe-style-chi.vercel.app/',
+    githubUrl: 'https://github.com/Anand-Kumar87/style872654.github.io',
+    features: ['Product Catalog & Filtering', 'Interactive Shopping Cart', 'Secure Checkout Flow', 'Order Tracking']
+  },
+  {
+    _id: 'default-nex',
+    title: 'Nexus Finance Expense Tracker',
+    description: 'Smart personal finance & AI-assisted expense tracker with real-time budget forecasting, interactive spending analytics, shared wallets, and transaction monitoring.',
+    image: '/images/projects/nexus-finance.png',
+    technologies: ['Next.js', 'MongoDB', 'Chart.js', 'REST API', 'Framer Motion'],
+    techStack: ['Next.js', 'MongoDB', 'Chart.js', 'REST API', 'Framer Motion'],
+    category: 'Web App',
+    status: 'Completed',
+    liveUrl: 'https://nexus-finace.netlify.app/',
+    githubUrl: 'https://github.com/Anand-Kumar87/-Advanced-Expense-Tracker',
+    features: ['Real-time Income/Expense Analytics', 'Dynamic Visual Reports', 'Category-wise Breakdown', 'Monthly Budget Alerts']
+  }
+];
+
 export default function ProjectGallery() {
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState(defaultProjects);
   const [selectedProject, setSelectedProject] = useState(null);
   const [filter, setFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [visibleCount, setVisibleCount] = useState(6);
 
@@ -350,13 +392,11 @@ export default function ProjectGallery() {
     fetch('/api/projects')
       .then(res => res.json())
       .then(data => {
-        setProjects(Array.isArray(data) ? data : []);
-        setLoading(false);
+        if (Array.isArray(data) && data.length > 0) {
+          setProjects(data);
+        }
       })
-      .catch(() => {
-        setProjects([]);
-        setLoading(false);
-      });
+      .catch(() => {});
   }, []);
 
   const categories = ['all', ...new Set(projects.map(p => p.category).filter(Boolean))];
