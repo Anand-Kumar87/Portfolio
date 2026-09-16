@@ -6,15 +6,28 @@ import connectDB from '@/lib/mongodb';
 import Blog from '@/models/Blog';
 import { notFound } from 'next/navigation';
 
+function sanitizeHtml(html) {
+  if (!html) return '';
+  return String(html)
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+="[^"]*"/gi, '')
+    .replace(/on\w+='[^']*'/gi, '')
+    .replace(/on\w+=[^\s>]+/gi, '')
+    .replace(/href=["']?javascript:[^"'>]*/gi, 'href="#"');
+}
+
 export const dynamic = 'force-dynamic';
 
 async function getPost(slug) {
-  await connectDB();
-  const post = await Blog.findOne({ slug, published: true }).lean();
-  
-  if (!post) return null;
-  
-  return JSON.parse(JSON.stringify(post));
+  try {
+    await connectDB();
+    const post = await Blog.findOne({ slug, published: true }).lean();
+    if (!post) return null;
+    return JSON.parse(JSON.stringify(post));
+  } catch (error) {
+    console.warn('Database connection skipped for post:', error.message);
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }) {
@@ -89,7 +102,7 @@ export default async function BlogPostPage({ params }) {
           <article className="prose dark:prose-invert max-w-none">
             <div
               className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap text-lg"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
             />
           </article>
         </GlassCard>

@@ -6,6 +6,8 @@ import SkillsManager from '@/components/AdminDashboard/SkillsManager';
 import AboutManager from '@/components/AdminDashboard/AboutManager';
 import AchievementsManager from '@/components/AdminDashboard/AchievementsManager';
 import TimelineManager from '@/components/AdminDashboard/TimelineManager';
+import BlogManager from '@/components/AdminDashboard/BlogManager';
+import SocialManager from '@/components/AdminDashboard/SocialManager';
 import { FiLogOut, FiHome } from 'react-icons/fi';
 
 export default function AdminDashboard() {
@@ -44,6 +46,8 @@ export default function AdminDashboard() {
     { id: 'projects', label: 'Projects' },
     { id: 'achievements', label: 'Achievements' },
     { id: 'timeline', label: 'Education & Experience' },
+    { id: 'blog', label: 'Blog Posts' },
+    { id: 'social', label: 'Social Links' },
   ];
 
   return (
@@ -99,6 +103,8 @@ export default function AdminDashboard() {
             {activeTab === 'projects' && <ProjectsManager />}
             {activeTab === 'achievements' && <AchievementsManager />}
             {activeTab === 'timeline' && <TimelineManager />}
+            {activeTab === 'blog' && <BlogManager />}
+            {activeTab === 'social' && <SocialManager />}
           </div>
         </div>
       </div>

@@ -34,6 +34,12 @@ const ProjectCard = ({ project, index, onSelect }) => {
     setIsHovered(false);
   };
 
+  const githubUrl = project.githubUrl || project.githubLink;
+  const liveUrl = project.liveUrl || project.liveLink;
+  const technologies = (project.technologies && project.technologies.length) 
+    ? project.technologies 
+    : (project.techStack || []);
+
   return (
     <motion.div
       ref={cardRef}
@@ -48,12 +54,13 @@ const ProjectCard = ({ project, index, onSelect }) => {
       onClick={() => onSelect(project)}
       className="group cursor-pointer relative"
     >
-      <div className="glass dark:glass-dark rounded-3xl overflow-hidden h-[500px] relative border border-white/10 hover:border-white/20 transition-all duration-500">
+      <div className="glass dark:glass-dark rounded-3xl overflow-hidden h-[500px] relative border border-white/10 hover:border-white/20 transition-all duration-500 flex flex-col">
         {/* Project Image */}
-        <div className="relative h-64 overflow-hidden">
+        <div className="relative h-60 overflow-hidden flex-shrink-0">
           <motion.img
-            src={project.image || '/images/project-placeholder.jpg'}
+            src={project.image || '/images/project-placeholder.svg'}
             alt={project.title}
+            onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
             className="w-full h-full object-cover"
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.6 }}
@@ -65,8 +72,8 @@ const ProjectCard = ({ project, index, onSelect }) => {
           {/* Status Badge */}
           <div className="absolute top-4 left-4">
             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-              project.status === 'completed' ? 'bg-green-500 text-white' :
-              project.status === 'in-progress' ? 'bg-yellow-500 text-white' :
+              (project.status || '').toLowerCase() === 'completed' ? 'bg-green-500 text-white' :
+              (project.status || '').toLowerCase() === 'in-progress' ? 'bg-yellow-500 text-white' :
               'bg-blue-500 text-white'
             }`}>
               {project.status || 'Completed'}
@@ -79,39 +86,34 @@ const ProjectCard = ({ project, index, onSelect }) => {
             animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
             className="absolute top-4 right-4 flex gap-2"
           >
-            {project.githubUrl && (
+            {githubUrl && (
               <motion.a
-                href={project.githubUrl}
+                href={githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => e.stopPropagation()}
                 className="p-2 bg-black/40 backdrop-blur-sm rounded-full text-white hover:bg-black/60 transition-colors"
+                title="View GitHub Repository"
               >
                 <FiGithub size={16} />
               </motion.a>
             )}
-            {project.liveUrl && (
+            {liveUrl && (
               <motion.a
-                href={project.liveUrl}
+                href={liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={(e) => e.stopPropagation()}
                 className="p-2 bg-black/40 backdrop-blur-sm rounded-full text-white hover:bg-black/60 transition-colors"
+                title="View Live Demo"
               >
                 <FiExternalLink size={16} />
               </motion.a>
             )}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 bg-black/40 backdrop-blur-sm rounded-full text-white hover:bg-black/60 transition-colors"
-            >
-              <FiPlay size={16} />
-            </motion.button>
           </motion.div>
 
           {/* Play Button Overlay */}
@@ -143,7 +145,7 @@ const ProjectCard = ({ project, index, onSelect }) => {
 
           {/* Tech Stack */}
           <div className="flex flex-wrap gap-2">
-            {project.technologies?.slice(0, 4).map((tech, i) => {
+            {technologies.slice(0, 4).map((tech, i) => {
               const IconComponent = getLanguageIcon(tech);
               return (
                 <div
@@ -155,9 +157,9 @@ const ProjectCard = ({ project, index, onSelect }) => {
                 </div>
               );
             })}
-            {project.technologies?.length > 4 && (
+            {technologies.length > 4 && (
               <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs">
-                +{project.technologies.length - 4}
+                +{technologies.length - 4}
               </span>
             )}
           </div>
@@ -197,6 +199,12 @@ const ProjectCard = ({ project, index, onSelect }) => {
 const ProjectModal = ({ project, onClose }) => {
   if (!project) return null;
 
+  const modalTech = (project.technologies && project.technologies.length) 
+    ? project.technologies 
+    : (project.techStack || []);
+  const modalLive = project.liveUrl || project.liveLink;
+  const modalGithub = project.githubUrl || project.githubLink;
+
   return (
     <AnimatePresence>
       <motion.div
@@ -216,8 +224,9 @@ const ProjectModal = ({ project, onClose }) => {
           {/* Header */}
           <div className="relative h-64 overflow-hidden rounded-t-3xl">
             <img
-              src={project.image || '/images/project-placeholder.jpg'}
+              src={project.image || '/images/project-placeholder.svg'}
               alt={project.title}
+              onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
@@ -240,7 +249,7 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
 
                 {/* Features */}
-                {project.features && (
+                {project.features && project.features.length > 0 && (
                   <div>
                     <h3 className="text-xl font-semibold mb-3">Key Features</h3>
                     <ul className="space-y-2">
@@ -258,7 +267,7 @@ const ProjectModal = ({ project, onClose }) => {
                 <div>
                   <h3 className="text-xl font-semibold mb-3">Technologies Used</h3>
                   <div className="flex flex-wrap gap-3">
-                    {project.technologies?.map((tech, i) => {
+                    {modalTech.map((tech, i) => {
                       const IconComponent = getLanguageIcon(tech);
                       return (
                         <div
@@ -290,16 +299,16 @@ const ProjectModal = ({ project, onClose }) => {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-gray-500">Category</span>
-                      <span className="font-medium capitalize">{project.category}</span>
+                      <span className="font-medium capitalize">{project.category || 'Web'}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Action Buttons */}
                 <div className="space-y-3">
-                  {project.liveUrl && (
+                  {modalLive && (
                     <a
-                      href={project.liveUrl}
+                      href={modalLive}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full glow-button flex items-center justify-center gap-2"
@@ -308,9 +317,9 @@ const ProjectModal = ({ project, onClose }) => {
                       View Live Demo
                     </a>
                   )}
-                  {project.githubUrl && (
+                  {modalGithub && (
                     <a
-                      href={project.githubUrl}
+                      href={modalGithub}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="w-full glass dark:glass-dark px-4 py-3 rounded-full font-semibold flex items-center justify-center gap-2 hover:scale-105 transition-all"
@@ -335,6 +344,8 @@ export default function ProjectGallery() {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
 
+  const [visibleCount, setVisibleCount] = useState(6);
+
   useEffect(() => {
     fetch('/api/projects')
       .then(res => res.json())
@@ -352,6 +363,7 @@ export default function ProjectGallery() {
   const filteredProjects = filter === 'all' 
     ? projects 
     : projects.filter(project => project.category === filter);
+  const displayedProjects = filteredProjects.slice(0, visibleCount);
 
   if (loading) {
     return (
@@ -408,7 +420,10 @@ export default function ProjectGallery() {
           {categories.map((category) => (
             <motion.button
               key={category}
-              onClick={() => setFilter(category)}
+              onClick={() => {
+                setFilter(category);
+                setVisibleCount(6);
+              }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={`px-6 py-3 rounded-full font-medium transition-all capitalize ${
@@ -423,32 +438,40 @@ export default function ProjectGallery() {
         </motion.div>
 
         {/* Projects Grid */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          <AnimatePresence>
-            {filteredProjects.map((project, index) => (
-              <ProjectCard
-                key={project._id}
-                project={project}
-                index={index}
-                onSelect={setSelectedProject}
-              />
-            ))}
-          </AnimatePresence>
-        </motion.div>
+        {displayedProjects.length > 0 ? (
+          <motion.div
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            <AnimatePresence>
+              {displayedProjects.map((project, index) => (
+                <ProjectCard
+                  key={project._id}
+                  project={project}
+                  index={index}
+                  onSelect={setSelectedProject}
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        ) : (
+          <div className="text-center py-16 glass dark:glass-dark rounded-3xl p-8 max-w-lg mx-auto">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">No projects found in this category.</p>
+          </div>
+        )}
 
         {/* Load More Button */}
-        {filteredProjects.length > 6 && (
+        {visibleCount < filteredProjects.length && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={{ opacity: 1, y: 0 }}
             className="text-center mt-12"
           >
-            <button className="glow-button">
-              Load More Projects
+            <button
+              onClick={() => setVisibleCount((prev) => prev + 6)}
+              className="glow-button cursor-pointer"
+            >
+              Load More Projects ({filteredProjects.length - visibleCount} remaining)
             </button>
           </motion.div>
         )}

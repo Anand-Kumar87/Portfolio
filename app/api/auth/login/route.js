@@ -24,17 +24,16 @@ export async function POST(request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid credentials - user not found' },
+        { error: 'Invalid username or password' },
         { status: 401 }
       );
     }
 
     const isValid = await verifyPassword(password, user.password);
-    console.log('Password valid:', isValid);
 
     if (!isValid) {
       return NextResponse.json(
-        { error: 'Invalid credentials - wrong password' },
+        { error: 'Invalid username or password' },
         { status: 401 }
       );
     }

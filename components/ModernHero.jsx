@@ -186,11 +186,11 @@ export default function ModernHero() {
               className="grid grid-cols-3 gap-6"
             >
               <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">5+</div>
+                <div className="text-3xl font-bold gradient-text">3+</div>
                 <div className="text-sm text-gray-500">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold gradient-text">50+</div>
+                <div className="text-3xl font-bold gradient-text">30+</div>
                 <div className="text-sm text-gray-500">Projects Completed</div>
               </div>
               <div className="text-center">
@@ -204,7 +204,7 @@ export default function ModernHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.1 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-4 items-center"
             >
               <a href="#contact" className="glow-button group">
                 <FiMail className="mr-2 group-hover:rotate-12 transition-transform" />
@@ -216,9 +216,13 @@ export default function ModernHero() {
                 Download CV
               </a>
 
-              <button className="p-3 glass dark:glass-dark rounded-full hover:scale-110 transition-all group">
-                <FiPlay className="group-hover:scale-125 transition-transform" />
-              </button>
+              <a
+                href="#projects"
+                title="Explore Featured Projects"
+                className="p-3.5 glass dark:glass-dark rounded-full hover:scale-110 transition-all group hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 hover:text-white"
+              >
+                <FiPlay className="group-hover:scale-110 transition-transform ml-0.5" />
+              </a>
             </motion.div>
 
             {/* Social Links */}

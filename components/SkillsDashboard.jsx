@@ -181,7 +181,7 @@ export default function SkillsDashboard() {
     {
       icon: FiTrendingUp,
       title: 'Avg. Level',
-      value: Math.round(skills.reduce((acc, s) => acc + s.level, 0) / skills.length) + '%',
+      value: (skills.length > 0 ? Math.round(skills.reduce((acc, s) => acc + (s.level || 0), 0) / skills.length) : 0) + '%',
       description: 'Overall expertise',
       color: 'bg-orange-500'
     }

@@ -10,19 +10,18 @@ export async function POST(request) {
     
     const existingUsers = await User.countDocuments();
     
-    // Uncomment the lines below to only allow setup when no users exist
-    // if (existingUsers > 0) {
-    //   return NextResponse.json(
-    //     { error: 'Setup already completed' },
-    //     { status: 403 }
-    //   );
-    // }
+    if (existingUsers > 0) {
+      return NextResponse.json(
+        { error: 'Setup has already been completed. Contact administrator.' },
+        { status: 403 }
+      );
+    }
 
     const { username, password } = await request.json();
 
-    if (!username || !password) {
+    if (!username || !password || password.length < 6) {
       return NextResponse.json(
-        { error: 'Username and password required' },
+        { error: 'Valid username and password (minimum 6 characters) required' },
         { status: 400 }
       );
     }

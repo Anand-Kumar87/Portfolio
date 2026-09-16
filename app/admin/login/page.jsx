@@ -110,17 +110,6 @@ export default function AdminLogin() {
             </a>
           </div>
         </div>
-
-        {/* Default Credentials Info */}
-        <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-sm">
-          <p className="font-semibold text-blue-800 dark:text-blue-200 mb-1">Default Credentials:</p>
-          <p className="text-blue-700 dark:text-blue-300">
-            Username: <code className="bg-blue-100 dark:bg-blue-800 px-2 py-0.5 rounded">admin</code>
-          </p>
-          <p className="text-blue-700 dark:text-blue-300">
-            Password: <code className="bg-blue-100 dark:bg-blue-800 px-2 py-0.5 rounded">Admin@12345</code>
-          </p>
-        </div>
       </div>
     </div>
   );

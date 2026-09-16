@@ -118,7 +118,7 @@ export default function EnhancedContact() {
       icon: FiMail,
       label: 'Email',
       value: 'solestyle41@gmail.com',
-      href: 'solestyle41@gmail.com'
+      href: 'mailto:solestyle41@gmail.com'
     },
     {
       icon: FiPhone,
@@ -222,6 +222,17 @@ export default function EnhancedContact() {
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 required
+              />
+
+              {/* Honeypot field to prevent bot spam */}
+              <input
+                type="text"
+                name="_hp"
+                value={formData._hp || ''}
+                onChange={(e) => setFormData({ ...formData, _hp: e.target.value })}
+                style={{ display: 'none' }}
+                tabIndex={-1}
+                autoComplete="off"
               />
 
               <FloatingTextarea

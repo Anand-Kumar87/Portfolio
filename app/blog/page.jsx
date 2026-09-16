@@ -8,12 +8,16 @@ import Blog from '@/models/Blog';
 export const dynamic = 'force-dynamic';
 
 async function getBlogPosts() {
-  await connectDB();
-  const posts = await Blog.find({ published: true })
-    .sort({ createdAt: -1 })
-    .lean();
-  
-  return JSON.parse(JSON.stringify(posts));
+  try {
+    await connectDB();
+    const posts = await Blog.find({ published: true })
+      .sort({ createdAt: -1 })
+      .lean();
+    return JSON.parse(JSON.stringify(posts));
+  } catch (error) {
+    console.warn('Database connection skipped during build:', error.message);
+    return [];
+  }
 }
 
 export const metadata = {
