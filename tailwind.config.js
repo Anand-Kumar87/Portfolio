@@ -10,6 +10,10 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+      },
       colors: {
         glass: {
           light: 'rgba(255, 255, 255, 0.1)',

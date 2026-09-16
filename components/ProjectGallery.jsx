@@ -230,88 +230,117 @@ const ProjectModal = ({ project, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/85 backdrop-blur-md z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
-        onClick={onClose}
+        className="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-start justify-center p-3 sm:p-6 md:p-8 overflow-y-auto overscroll-contain"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 30 }}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 30 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="relative bg-white dark:bg-[#0f172a] text-gray-900 dark:text-gray-100 rounded-3xl max-w-4xl w-full max-h-[88vh] overflow-y-auto border border-gray-200 dark:border-slate-800 shadow-2xl my-auto overscroll-contain"
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="relative bg-white dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 rounded-3xl max-w-4xl w-full my-auto border border-slate-200 dark:border-slate-800 shadow-[0_25px_70px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header Image */}
-          <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-t-3xl bg-slate-900">
-            <img
-              src={project.image || '/images/project-placeholder.svg'}
-              alt={project.title}
-              onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
-              className="w-full h-full object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-            
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 p-2.5 bg-black/60 hover:bg-black/90 text-white rounded-full backdrop-blur-md transition-all shadow-xl hover:scale-110 z-20"
-              aria-label="Close modal"
-            >
-              ✕
-            </button>
-
-            {/* Title overlay on image for quick identification */}
-            <div className="absolute bottom-5 left-6 right-6">
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-blue-600 text-white mb-2 shadow-md">
-                {project.category || 'Featured'}
+          {/* Modal Header Bar */}
+          <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4 bg-slate-50/70 dark:bg-slate-900/60 flex-shrink-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex-shrink-0">
+                {project.category || 'Full-Stack'}
               </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-md">
+              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white truncate">
                 {project.title}
               </h2>
             </div>
+
+            <button
+              onClick={onClose}
+              className="w-9 h-9 rounded-full bg-slate-200/80 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 transition-colors flex-shrink-0 cursor-pointer"
+              aria-label="Close project modal"
+            >
+              ✕
+            </button>
           </div>
 
-          {/* Content */}
-          <div className="p-6 sm:p-8">
+          {/* Dedicated Clean Screenshot Preview (Browser Mockup Frame) */}
+          <div className="bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+            {/* Browser Dots Bar */}
+            <div className="px-4 py-2 bg-slate-900/90 flex items-center justify-between border-b border-white/5">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
+              </div>
+              <div className="text-[11px] font-mono text-slate-400 bg-slate-800/80 px-4 py-0.5 rounded-full truncate max-w-xs sm:max-w-md">
+                {modalLive ? modalLive.replace(/^https?:\/\//, '') : `${project.title.toLowerCase().replace(/\s+/g, '-')}.app`}
+              </div>
+              <div className="w-10" />
+            </div>
+
+            {/* Clean Screenshot - NO text overlay */}
+            <div className="relative w-full max-h-[380px] overflow-hidden bg-slate-950 flex items-center justify-center">
+              <img
+                src={project.image || '/images/project-placeholder.svg'}
+                alt={project.title}
+                onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
+                className="w-full h-auto max-h-[380px] object-cover object-top"
+              />
+            </div>
+          </div>
+
+          {/* Modal Content Body */}
+          <div className="p-6 sm:p-8 max-h-[50vh] overflow-y-auto overscroll-contain">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Info */}
+              {/* Left Column: Description & Highlights */}
               <div className="lg:col-span-2 space-y-6">
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">About Project</h3>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-wide text-xs text-blue-500">
+                    Project Overview
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
                     {project.description}
                   </p>
                 </div>
 
-                {/* Features */}
+                {/* Key Features */}
                 {project.features && project.features.length > 0 && (
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Key Highlights</h3>
-                    <ul className="space-y-2.5">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide text-xs text-blue-500">
+                      Core Features & Architecture
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {project.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
-                          <span className="text-gray-700 dark:text-gray-200 text-sm sm:text-base leading-snug">
+                        <div 
+                          key={i} 
+                          className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
+                        >
+                          <span className="w-5 h-5 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 font-bold">
+                            ✓
+                          </span>
+                          <span className="text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-medium leading-snug">
                             {feature}
                           </span>
-                        </li>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 )}
 
-                {/* Technologies */}
+                {/* Tech Stack */}
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Tech Stack & Tools</h3>
-                  <div className="flex flex-wrap gap-2.5">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide text-xs text-blue-500">
+                    Technologies & Libraries
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
                     {modalTech.map((tech, i) => {
                       const IconComponent = getLanguageIcon(tech);
                       return (
                         <div
                           key={i}
-                          className="flex items-center gap-2 px-3.5 py-2 bg-gray-100 dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-gray-200 text-xs sm:text-sm font-medium shadow-sm"
+                          className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-sm"
                         >
-                          <IconComponent size={16} className="text-blue-500" />
+                          <IconComponent size={14} className="text-blue-500" />
                           <span>{tech}</span>
                         </div>
                       );
@@ -320,41 +349,40 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
               </div>
 
-              {/* Sidebar */}
-              <div className="space-y-6">
-                {/* Project Stats */}
-                <div className="bg-gray-50 dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 p-5 sm:p-6 rounded-2xl shadow-sm">
-                  <h3 className="font-bold text-gray-900 dark:text-white text-base mb-4">Project Overview</h3>
-                  <div className="space-y-3.5 text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Status</span>
-                      <span className="font-semibold text-emerald-600 dark:text-emerald-400 capitalize flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        {project.status || 'Completed'}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Timeline</span>
-                      <span className="font-semibold text-gray-800 dark:text-gray-200">{project.year || '2024'}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-500 dark:text-gray-400">Category</span>
-                      <span className="font-semibold text-gray-800 dark:text-gray-200 capitalize">{project.category || 'Web App'}</span>
-                    </div>
+              {/* Right Column: Meta & Actions */}
+              <div className="space-y-5">
+                <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 p-5 rounded-2xl space-y-3.5 text-xs">
+                  <h4 className="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wide text-slate-400">
+                    Specifications
+                  </h4>
+                  <div className="flex items-center justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
+                    <span className="text-slate-500 dark:text-slate-400">Status</span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      {project.status || 'Completed'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
+                    <span className="text-slate-500 dark:text-slate-400">Timeline</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200">{project.year || '2024'}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-slate-500 dark:text-slate-400">Category</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200 capitalize">{project.category || 'Full-Stack'}</span>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="space-y-3">
+                {/* CTAs */}
+                <div className="space-y-2.5">
                   {modalLive && (
                     <a
                       href={modalLive}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full glow-button flex items-center justify-center gap-2 py-3.5 text-sm font-semibold shadow-lg text-center"
+                      className="w-full glow-button flex items-center justify-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold shadow-lg text-center cursor-pointer"
                     >
-                      <FiExternalLink size={16} />
-                      Open Live Project
+                      <FiExternalLink size={15} />
+                      Open Live Demo
                     </a>
                   )}
                   {modalGithub && (
@@ -362,12 +390,18 @@ const ProjectModal = ({ project, onClose }) => {
                       href={modalGithub}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-slate-700 px-4 py-3 rounded-full font-semibold flex items-center justify-center gap-2 transition-all text-sm shadow-sm"
+                      className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 px-4 py-3 rounded-full font-bold flex items-center justify-center gap-2 transition-all text-xs sm:text-sm shadow-sm cursor-pointer"
                     >
-                      <FiGithub size={16} />
-                      View Source Code
+                      <FiGithub size={15} />
+                      Source Code
                     </a>
                   )}
+                  <button
+                    onClick={onClose}
+                    className="w-full py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+                  >
+                    Close Preview
+                  </button>
                 </div>
               </div>
             </div>

@@ -13,7 +13,8 @@ import {
   FiLogOut, 
   FiChevronDown, 
   FiShield,
-  FiUser
+  FiUser,
+  FiExternalLink
 } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 
@@ -21,15 +22,20 @@ const NavLink = ({ href, children, onClick, mobile = false }) => (
   <motion.a
     href={href}
     onClick={onClick}
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className={`relative group ${
+    whileHover={{ scale: 1.04 }}
+    whileTap={{ scale: 0.96 }}
+    className={`relative group cursor-pointer ${
       mobile 
         ? 'block py-3 px-4 text-base font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-colors text-slate-800 dark:text-slate-200'
-        : 'px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
+        : 'px-3.5 py-2 text-sm font-semibold transition-colors text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400'
     }`}
   >
     {children}
+    {!mobile && (
+      <motion.div
+        className="absolute bottom-0 left-3 right-3 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+      />
+    )}
   </motion.a>
 );
 
@@ -126,246 +132,239 @@ export default function ModernNavbar() {
 
   return (
     <>
-      {/* Apple-Style Floating Pill Navigation Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-3.5 sm:pt-4 pointer-events-none">
-        <motion.nav
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className={`pointer-events-auto w-full max-w-5xl rounded-full px-4 sm:px-6 py-2.5 flex items-center justify-between transition-all duration-300 ${
-            isScrolled 
-              ? 'bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800/90 shadow-[0_12px_40px_rgba(0,0,0,0.18)]' 
-              : 'bg-white/75 dark:bg-[#0f172a]/75 backdrop-blur-xl border border-white/50 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]'
-          }`}
-        >
-          {/* Logo */}
-          <motion.a
-            href="#home"
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick('#home');
-            }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            className="flex items-center gap-2.5 cursor-pointer flex-shrink-0"
-          >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-md shadow-blue-500/25">
-              <span className="text-white font-bold text-xs sm:text-sm">AK</span>
-            </div>
-            <span className="text-sm sm:text-base font-bold gradient-text tracking-tight hidden xs:inline-block">
-              Anand Kumar
-            </span>
-          </motion.a>
-
-          {/* Desktop Navigation Links */}
-          <div className="hidden lg:flex items-center gap-1 bg-black/[0.03] dark:bg-white/[0.04] px-2 py-1 rounded-full border border-black/[0.04] dark:border-white/[0.05]">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.href}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(item.href);
-                }}
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </div>
-
-          {/* Desktop Profile Hub Trigger & Dropdown */}
-          <div className="flex items-center gap-2 relative" ref={profileMenuRef}>
-            <motion.button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className={`flex items-center gap-2 p-1 sm:pr-3 rounded-full border transition-all duration-200 ${
-                isProfileOpen 
-                  ? 'bg-blue-50 dark:bg-slate-800 border-blue-500 ring-2 ring-blue-500/20' 
-                  : 'bg-black/[0.03] dark:bg-white/[0.06] border-slate-200 dark:border-slate-800 hover:border-blue-400'
-              }`}
-              aria-label="Toggle profile menu"
-              aria-expanded={isProfileOpen}
+      <motion.nav
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-white/90 dark:bg-[#0b0f19]/95 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/90 shadow-[0_4px_24px_rgba(0,0,0,0.08)] py-3' 
+            : 'bg-transparent py-5'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            {/* Left: Brand Logo */}
+            <motion.a
+              href="#home"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavClick('#home');
+              }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              className="flex items-center gap-3 cursor-pointer group"
             >
-              {/* Avatar with Status Dot */}
-              <div className="relative">
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-blue-600 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-sm">
-                  AK
-                </div>
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-all">
+                <span className="text-white font-bold text-base tracking-wider">AK</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold gradient-text tracking-tight">Anand Kumar</span>
+                <span className="text-[11px] text-emerald-500 font-semibold flex items-center gap-1.5 -mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Available for hire
                 </span>
               </div>
+            </motion.a>
 
-              <div className="text-left leading-tight hidden sm:block">
-                <div className="text-xs font-semibold text-gray-900 dark:text-gray-100">
-                  Anand K.
-                </div>
-                <div className="text-[10px] text-emerald-500 font-medium">Available</div>
-              </div>
-
-              <motion.div
-                animate={{ rotate: isProfileOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="text-gray-500 dark:text-gray-400 hidden sm:block pr-1"
-              >
-                <FiChevronDown size={14} />
-              </motion.div>
-            </motion.button>
-
-            {/* Mobile Menu Toggle Button */}
-            <motion.button
-              onClick={() => setIsOpen(!isOpen)}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              className="lg:hidden p-2 bg-black/[0.03] dark:bg-white/[0.06] hover:bg-black/[0.08] dark:hover:bg-white/[0.12] rounded-full border border-slate-200 dark:border-slate-800 text-gray-700 dark:text-gray-200"
-              aria-label="Toggle mobile menu"
-            >
-              {isOpen ? <FiX size={18} /> : <FiMenu size={18} />}
-            </motion.button>
-
-            {/* 100% OPAQUE Profile Dropdown Popover (NO TRANSPARENCY) */}
-            <AnimatePresence>
-              {isProfileOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.96 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute right-0 top-full mt-3 w-80 bg-white dark:bg-[#0f172a] rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-[0_20px_60px_rgba(0,0,0,0.3)] z-[110]"
+            {/* Center: Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center gap-2 bg-black/[0.03] dark:bg-white/[0.04] px-4 py-1.5 rounded-full border border-black/[0.05] dark:border-white/[0.08]">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.href}
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick(item.href);
+                  }}
                 >
-                  {/* User Profile Header */}
-                  <div className="flex items-center gap-3.5 pb-4 border-b border-slate-100 dark:border-slate-800">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
-                      AK
-                    </div>
-                    <div className="overflow-hidden">
-                      <h4 className="font-bold text-gray-900 dark:text-white text-base truncate">
-                        Anand Kumar
-                      </h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                        Full-Stack Engineer
-                      </p>
-                      <div className="flex items-center gap-1.5 mt-1 text-[11px] text-emerald-500 font-semibold">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        Open for Opportunities
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+
+            {/* Right: Actions & Profile Hub */}
+            <div className="hidden lg:flex items-center gap-3">
+              {/* Quick Hire Me CTA */}
+              <motion.a
+                href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick('#contact');
+                }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="glow-button !py-2.5 !px-5 !text-xs !font-bold flex items-center gap-2 shadow-md hover:shadow-blue-500/25 cursor-pointer"
+              >
+                <FiMail size={14} />
+                <span>Hire Me</span>
+              </motion.a>
+
+              {/* Profile Avatar Hub Trigger & Popover Dropdown */}
+              <div className="relative" ref={profileMenuRef}>
+                <motion.button
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`flex items-center gap-2.5 p-1.5 pr-3 rounded-full border transition-all duration-200 cursor-pointer ${
+                    isProfileOpen 
+                      ? 'border-blue-500 ring-2 ring-blue-500/20 bg-slate-100 dark:bg-slate-800' 
+                      : 'border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 hover:border-blue-400'
+                  }`}
+                  aria-label="Profile and quick settings menu"
+                  aria-expanded={isProfileOpen}
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                    AK
+                  </div>
+                  <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 hidden xl:inline-block">
+                    Anand K.
+                  </span>
+                  <FiChevronDown 
+                    size={14} 
+                    className={`text-slate-500 transition-transform duration-300 ${isProfileOpen ? 'rotate-180 text-blue-500' : ''}`} 
+                  />
+                </motion.button>
+
+                {/* SOLID OPAQUE Dropdown Menu (No bleed-through) */}
+                <AnimatePresence>
+                  {isProfileOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                      transition={{ duration: 0.15, ease: 'easeOut' }}
+                      className="absolute right-0 mt-2.5 w-72 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 shadow-[0_20px_50px_rgba(0,0,0,0.3)] z-[120] overflow-hidden p-3.5 space-y-3"
+                    >
+                      {/* Identity Card */}
+                      <div className="flex items-center gap-3 p-2 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-100 dark:border-slate-700/60">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+                          AK
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white truncate">Anand Kumar</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Full-Stack Engineer</p>
+                        </div>
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
                       </div>
-                    </div>
-                  </div>
 
-                  {/* Mode / Theme Segmented Switch (Solid Background) */}
-                  <div className="py-4 border-b border-slate-100 dark:border-slate-800">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                        Appearance
-                      </span>
-                      <span className="text-xs text-gray-400 capitalize font-medium">{theme} Mode</span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
-                      <button
-                        onClick={() => setTheme('light')}
-                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
-                          theme === 'light'
-                            ? 'bg-white text-amber-500 shadow-md font-bold'
-                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                        }`}
-                      >
-                        <FiSun size={15} className="text-amber-500" />
-                        Light
-                      </button>
-                      <button
-                        onClick={() => setTheme('dark')}
-                        className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-semibold transition-all ${
-                          theme === 'dark'
-                            ? 'bg-slate-900 text-indigo-400 shadow-md font-bold'
-                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                        }`}
-                      >
-                        <FiMoon size={15} className="text-indigo-400" />
-                        Dark
-                      </button>
-                    </div>
-                  </div>
+                      {/* Appearance Switcher */}
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1 mb-1.5">
+                          Appearance
+                        </p>
+                        <div className="grid grid-cols-2 gap-1.5 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl">
+                          <button
+                            onClick={() => setTheme('light')}
+                            className={`flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg text-xs font-semibold transition-all ${
+                              theme === 'light'
+                                ? 'bg-white text-amber-600 shadow-sm'
+                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                            }`}
+                          >
+                            <FiSun size={13} className="text-amber-500" />
+                            Light
+                          </button>
+                          <button
+                            onClick={() => setTheme('dark')}
+                            className={`flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg text-xs font-semibold transition-all ${
+                              theme === 'dark'
+                                ? 'bg-slate-900 text-indigo-400 shadow-sm'
+                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                            }`}
+                          >
+                            <FiMoon size={13} className="text-indigo-400" />
+                            Dark
+                          </button>
+                        </div>
+                      </div>
 
-                  {/* Quick Action Buttons */}
-                  <div className="py-4 space-y-2.5 border-b border-slate-100 dark:border-slate-800">
-                    <motion.a
-                      href="#contact"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNavClick('#contact');
-                      }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full glow-button flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-semibold shadow-lg text-center cursor-pointer"
-                    >
-                      <FiMail size={16} />
-                      Hire Me / Get in Touch
-                    </motion.a>
-
-                    <motion.a
-                      href="/resume.pdf"
-                      download
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl font-semibold text-xs text-gray-800 dark:text-gray-200 transition-colors"
-                    >
-                      <FiDownload size={14} />
-                      Download CV / Resume
-                    </motion.a>
-                  </div>
-
-                  {/* Admin Area */}
-                  <div className="pt-3 space-y-1">
-                    {isLoggedIn ? (
-                      <>
-                        <button
-                          onClick={() => {
-                            setIsProfileOpen(false);
-                            router.push('/admin/dashboard');
-                          }}
-                          className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      {/* Navigation Actions */}
+                      <div className="space-y-1 pt-1 border-t border-slate-100 dark:border-slate-800">
+                        <a
+                          href="/resume.pdf"
+                          download
+                          onClick={() => setIsProfileOpen(false)}
+                          className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
                         >
                           <span className="flex items-center gap-2">
-                            <FiShield size={15} className="text-blue-500" />
-                            Admin Dashboard
+                            <FiDownload size={14} className="text-blue-500" />
+                            Download Resume
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-500 text-[10px] font-bold">
-                            Admin
-                          </span>
-                        </button>
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-2 p-2.5 rounded-xl text-xs font-semibold text-red-500 hover:bg-red-500/10 transition-colors"
-                        >
-                          <FiLogOut size={15} />
-                          Sign Out
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => {
-                          setIsProfileOpen(false);
-                          router.push('/admin/login');
-                        }}
-                        className="w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold text-gray-800 dark:text-gray-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                      >
-                        <span className="flex items-center gap-2">
-                          <FiLock size={15} className="text-gray-500 dark:text-gray-400" />
-                          Admin Portal
-                        </span>
-                        <span className="text-[10px] text-gray-400 font-medium">Login</span>
-                      </button>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </motion.nav>
-      </header>
+                          <span className="text-[10px] uppercase font-bold text-slate-400">PDF</span>
+                        </a>
 
-      {/* Mobile Menu Drawer (Opaque & Smoothly Scrollable) */}
+                        {isLoggedIn ? (
+                          <>
+                            <button
+                              onClick={() => {
+                                setIsProfileOpen(false);
+                                router.push('/admin/dashboard');
+                              }}
+                              className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 rounded-xl transition-colors text-left cursor-pointer"
+                            >
+                              <span className="flex items-center gap-2">
+                                <FiShield size={14} />
+                                Admin Dashboard
+                              </span>
+                              <FiExternalLink size={12} />
+                            </button>
+                            <button
+                              onClick={handleLogout}
+                              className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl transition-colors text-left cursor-pointer"
+                            >
+                              <span className="flex items-center gap-2">
+                                <FiLogOut size={14} />
+                                Sign Out
+                              </span>
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setIsProfileOpen(false);
+                              router.push('/admin/login');
+                            }}
+                            className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-left cursor-pointer"
+                          >
+                            <span className="flex items-center gap-2">
+                              <FiLock size={14} />
+                              Admin Portal
+                            </span>
+                            <span className="text-[10px] text-slate-400">Login</span>
+                          </button>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Mobile Controls (Theme Toggle + Hamburger) */}
+            <div className="flex items-center gap-2 lg:hidden">
+              <button
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <FiSun size={18} className="text-amber-400" /> : <FiMoon size={18} />}
+              </button>
+
+              <motion.button
+                onClick={() => setIsOpen(!isOpen)}
+                whileTap={{ scale: 0.9 }}
+                className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 transition-colors"
+                aria-label="Open mobile navigation menu"
+              >
+                {isOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* Mobile Drawer (Smooth, non-laggy, completely scrollable) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -375,10 +374,10 @@ export default function ModernNavbar() {
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed inset-y-0 right-0 w-80 max-w-[85vw] h-[100dvh] max-h-[100dvh] bg-white dark:bg-[#0f172a] z-50 lg:hidden border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl overflow-hidden"
           >
-            {/* Header */}
+            {/* Drawer Header */}
             <div className="p-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
                   <span className="text-white font-bold text-sm">AK</span>
                 </div>
                 <div>
@@ -393,21 +392,21 @@ export default function ModernNavbar() {
                 onClick={() => setIsOpen(false)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-gray-500 dark:text-gray-300"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-500 dark:text-slate-400"
                 aria-label="Close menu"
               >
                 <FiX size={22} />
               </motion.button>
             </div>
 
-            {/* Scrollable Body */}
+            {/* Drawer Scrollable Body */}
             <div 
               className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5 space-y-6 pb-28 touch-pan-y"
               style={{ WebkitOverflowScrolling: 'touch' }}
             >
               {/* Navigation Links */}
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2 px-2">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2 px-2">
                   Navigation
                 </p>
                 <div className="space-y-1">
@@ -435,7 +434,7 @@ export default function ModernNavbar() {
 
               {/* Theme Switcher */}
               <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-3">
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 px-2">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2">
                   Appearance
                 </p>
 
@@ -445,7 +444,7 @@ export default function ModernNavbar() {
                     className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-semibold transition-all ${
                       theme === 'light'
                         ? 'bg-white text-amber-500 shadow-sm font-bold'
-                        : 'text-gray-600 dark:text-gray-400'
+                        : 'text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <FiSun size={16} className="text-amber-500" />
@@ -456,7 +455,7 @@ export default function ModernNavbar() {
                     className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-semibold transition-all ${
                       theme === 'dark'
                         ? 'bg-slate-900 text-indigo-400 shadow-sm font-bold'
-                        : 'text-gray-600 dark:text-gray-400'
+                        : 'text-slate-600 dark:text-slate-400'
                     }`}
                   >
                     <FiMoon size={16} className="text-indigo-400" />
@@ -467,7 +466,7 @@ export default function ModernNavbar() {
 
               {/* Mobile Actions */}
               <div className="border-t border-slate-100 dark:border-slate-800 pt-4 space-y-2.5">
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 px-2">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2">
                   Quick Actions
                 </p>
 
@@ -490,7 +489,7 @@ export default function ModernNavbar() {
                   download
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full bg-slate-100 dark:bg-slate-800 py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 text-sm text-gray-800 dark:text-gray-200"
+                  className="w-full bg-slate-100 dark:bg-slate-800 py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-2 text-sm text-slate-800 dark:text-slate-200"
                 >
                   <FiDownload size={16} />
                   <span>Download CV</span>
@@ -525,7 +524,7 @@ export default function ModernNavbar() {
                       setIsOpen(false);
                       router.push('/admin/login');
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-100 dark:bg-slate-800 rounded-xl font-semibold text-sm text-gray-700 dark:text-gray-300"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-slate-100 dark:bg-slate-800 rounded-xl font-semibold text-sm text-slate-700 dark:text-slate-300"
                   >
                     <FiLock size={16} />
                     <span>Admin Portal</span>
@@ -537,7 +536,7 @@ export default function ModernNavbar() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Backdrop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
