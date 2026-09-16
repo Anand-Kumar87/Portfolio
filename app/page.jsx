@@ -45,9 +45,7 @@ export default function Home() {
         
         <Blog />
         
-        <section id="contact">
-          <EnhancedContact />
-        </section>
+        <EnhancedContact />
       </main>
       <Footer />
       <SocialFloating />

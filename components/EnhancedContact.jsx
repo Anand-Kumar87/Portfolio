@@ -56,7 +56,7 @@ const FloatingTextarea = ({ label, value, onChange, required = false }) => {
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         required={required}
-        rows={4}
+        rows={3}
         className="w-full px-4 py-3 bg-transparent border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-blue-500 focus:outline-none transition-colors resize-none"
         placeholder=" "
       />
@@ -135,7 +135,7 @@ export default function EnhancedContact() {
   ];
 
   return (
-    <section id="contact" className="py-20">
+    <section id="contact" className="py-20 pb-36 md:pb-24">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -148,16 +148,16 @@ export default function EnhancedContact() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl mx-auto">
           {/* Contact Info */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
             <h3 className="text-2xl font-bold mb-8">Let's Connect</h3>
             
-            <div className="space-y-6 mb-8">
+            <div className="space-y-5 mb-8">
               {contactInfo.map((info, index) => (
                 <motion.a
                   key={index}
@@ -166,7 +166,7 @@ export default function EnhancedContact() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
                   whileHover={{ x: 10 }}
-                  className="flex items-center gap-4 p-4 glass dark:glass-dark rounded-lg hover:shadow-lg transition-all group"
+                  className="flex items-center gap-4 p-4 glass dark:glass-dark rounded-xl hover:shadow-lg transition-all group"
                 >
                   <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-500 group-hover:text-white transition-colors">
                     <info.icon size={20} />
@@ -190,16 +190,16 @@ export default function EnhancedContact() {
                 repeat: Infinity,
                 ease: "linear"
               }}
-              className="w-32 h-32 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-20 blur-xl"
+              className="hidden sm:block w-32 h-32 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-20 blur-xl"
             />
           </motion.div>
 
           {/* Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-            className="glass dark:glass-dark p-8 rounded-2xl"
+            transition={{ delay: 0.3 }}
+            className="glass dark:glass-dark p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl"
           >
             <form onSubmit={handleSubmit}>
               <FloatingInput

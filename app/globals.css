@@ -19,6 +19,8 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
@@ -28,6 +30,9 @@ body {
   @apply min-h-screen;
   @apply transition-colors duration-500;
   overflow-x: hidden;
+  max-width: 100vw;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 @layer base {
