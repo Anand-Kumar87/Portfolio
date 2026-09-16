@@ -5,6 +5,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './utils/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   darkMode: 'class',
   theme: {
@@ -46,10 +47,4 @@ module.exports = {
     },
   },
   plugins: [],
-  // Important: Disable purging in production debugging
-  safelist: [
-    {
-      pattern: /./, // Keep all classes during debugging
-    },
-  ],
-}
+};

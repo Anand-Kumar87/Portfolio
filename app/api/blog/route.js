@@ -12,6 +12,7 @@ export async function GET(request) {
     const includeUnpublished = searchParams.get('all') === 'true';
     
     const token = getAuthToken(request);
+    const isAuthenticated = token ? !!verifyToken(token) : false;
     const query = (isAuthenticated && includeUnpublished) ? {} : { published: true };
     
     const posts = await Blog.find(query).sort({ createdAt: -1 });
