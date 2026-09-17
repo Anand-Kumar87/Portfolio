@@ -1,6 +1,7 @@
 'use client';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { FiGithub, FiExternalLink, FiPlay, FiStar, FiUsers, FiCalendar, FiCode, FiEye, FiHeart } from 'react-icons/fi';
 import { getLanguageIcon } from '@/utils/languageDetection';
 
@@ -197,6 +198,12 @@ const ProjectCard = ({ project, index, onSelect }) => {
 };
 
 const ProjectModal = ({ project, onClose }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (project) {
       document.body.style.overflow = 'hidden';
@@ -216,7 +223,7 @@ const ProjectModal = ({ project, onClose }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  if (!project) return null;
+  if (!mounted || !project) return null;
 
   const modalTech = (project.technologies && project.technologies.length) 
     ? project.technologies 
@@ -224,81 +231,82 @@ const ProjectModal = ({ project, onClose }) => {
   const modalLive = project.liveUrl || project.liveLink;
   const modalGithub = project.githubUrl || project.githubLink;
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/85 backdrop-blur-md z-[9999] flex items-start justify-center p-3 sm:p-6 md:p-8 overflow-y-auto overscroll-contain"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md z-[999999] flex items-center justify-center p-3 sm:p-5 md:p-6 overflow-hidden"
         onClick={(e) => {
           if (e.target === e.currentTarget) onClose();
         }}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="relative bg-white dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 rounded-3xl max-w-4xl w-full my-auto border border-slate-200 dark:border-slate-800 shadow-[0_25px_70px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col"
+          exit={{ opacity: 0, scale: 0.95, y: 15 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+          className="relative bg-white dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 rounded-2xl sm:rounded-3xl max-w-4xl w-full max-h-[92vh] sm:max-h-[86vh] border border-slate-200 dark:border-slate-800 shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Modal Header Bar */}
-          <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4 bg-slate-50/70 dark:bg-slate-900/60 flex-shrink-0">
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex-shrink-0">
+          {/* Modal Header Bar - ALWAYS sticky/pinned at the top */}
+          <div className="px-4 sm:px-6 py-3 sm:py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50/95 dark:bg-slate-900/95 backdrop-blur-md flex-shrink-0">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex-shrink-0">
                 {project.category || 'Full-Stack'}
               </span>
-              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white truncate">
+              <h2 className="text-sm sm:text-base md:text-lg font-extrabold text-slate-900 dark:text-white truncate">
                 {project.title}
               </h2>
             </div>
 
             <button
               onClick={onClose}
-              className="w-9 h-9 rounded-full bg-slate-200/80 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 transition-colors flex-shrink-0 cursor-pointer"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-200/80 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 transition-colors flex-shrink-0 cursor-pointer font-bold text-sm"
               aria-label="Close project modal"
             >
               ✕
             </button>
           </div>
 
-          {/* Dedicated Clean Screenshot Preview (Browser Mockup Frame) */}
-          <div className="bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-            {/* Browser Dots Bar */}
-            <div className="px-4 py-2 bg-slate-900/90 flex items-center justify-between border-b border-white/5">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
+          {/* Modal Body - Single smooth scroll container */}
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-6 space-y-5">
+            {/* Dedicated Clean Screenshot Preview (Browser Mockup Frame) */}
+            <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-inner">
+              {/* Browser Dots Bar */}
+              <div className="px-3.5 py-2 bg-slate-900/90 flex items-center justify-between border-b border-white/5">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+                </div>
+                <div className="text-[10px] sm:text-[11px] font-mono text-slate-400 bg-slate-800/80 px-3 py-0.5 rounded-full truncate max-w-[180px] sm:max-w-xs">
+                  {modalLive ? modalLive.replace(/^https?:\/\//, '') : `${project.title.toLowerCase().replace(/\s+/g, '-')}.app`}
+                </div>
+                <div className="w-6" />
               </div>
-              <div className="text-[11px] font-mono text-slate-400 bg-slate-800/80 px-4 py-0.5 rounded-full truncate max-w-xs sm:max-w-md">
-                {modalLive ? modalLive.replace(/^https?:\/\//, '') : `${project.title.toLowerCase().replace(/\s+/g, '-')}.app`}
+
+              {/* Clean Screenshot with controlled height */}
+              <div className="relative w-full h-44 sm:h-56 md:h-64 overflow-hidden bg-slate-950 flex items-center justify-center">
+                <img
+                  src={project.image || '/images/project-placeholder.svg'}
+                  alt={project.title}
+                  onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
+                  className="w-full h-full object-cover object-top"
+                />
               </div>
-              <div className="w-10" />
             </div>
 
-            {/* Clean Screenshot - NO text overlay */}
-            <div className="relative w-full max-h-[380px] overflow-hidden bg-slate-950 flex items-center justify-center">
-              <img
-                src={project.image || '/images/project-placeholder.svg'}
-                alt={project.title}
-                onError={(e) => { e.currentTarget.src = '/images/project-placeholder.svg'; }}
-                className="w-full h-auto max-h-[380px] object-cover object-top"
-              />
-            </div>
-          </div>
-
-          {/* Modal Content Body */}
-          <div className="p-6 sm:p-8 max-h-[50vh] overflow-y-auto overscroll-contain">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Grid: Description & Highlights vs Meta & Actions */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column: Description & Highlights */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-5">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-wide text-xs text-blue-500">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-1.5">
                     Project Overview
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-xs sm:text-sm">
                     {project.description}
                   </p>
                 </div>
@@ -306,19 +314,19 @@ const ProjectModal = ({ project, onClose }) => {
                 {/* Key Features */}
                 {project.features && project.features.length > 0 && (
                   <div>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide text-xs text-blue-500">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-2">
                       Core Features & Architecture
                     </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {project.features.map((feature, i) => (
                         <div 
                           key={i} 
-                          className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
+                          className="flex items-start gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-xs"
                         >
-                          <span className="w-5 h-5 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 font-bold">
+                          <span className="w-4 h-4 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center flex-shrink-0 text-xs mt-0.5 font-bold">
                             ✓
                           </span>
-                          <span className="text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-medium leading-snug">
+                          <span className="text-slate-700 dark:text-slate-200 font-medium leading-snug">
                             {feature}
                           </span>
                         </div>
@@ -329,18 +337,18 @@ const ProjectModal = ({ project, onClose }) => {
 
                 {/* Tech Stack */}
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-3 uppercase tracking-wide text-xs text-blue-500">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-2">
                     Technologies & Libraries
                   </h3>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {modalTech.map((tech, i) => {
                       const IconComponent = getLanguageIcon(tech);
                       return (
                         <div
                           key={i}
-                          className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-sm"
+                          className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold shadow-sm"
                         >
-                          <IconComponent size={14} className="text-blue-500" />
+                          <IconComponent size={13} className="text-blue-500" />
                           <span>{tech}</span>
                         </div>
                       );
@@ -350,9 +358,9 @@ const ProjectModal = ({ project, onClose }) => {
               </div>
 
               {/* Right Column: Meta & Actions */}
-              <div className="space-y-5">
-                <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 p-5 rounded-2xl space-y-3.5 text-xs">
-                  <h4 className="font-bold text-slate-900 dark:text-white text-sm uppercase tracking-wide text-slate-400">
+              <div className="space-y-4">
+                <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 p-4 rounded-2xl space-y-2.5 text-xs">
+                  <h4 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider text-slate-400">
                     Specifications
                   </h4>
                   <div className="flex items-center justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
@@ -373,15 +381,15 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
 
                 {/* CTAs */}
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   {modalLive && (
                     <a
                       href={modalLive}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full glow-button flex items-center justify-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold shadow-lg text-center cursor-pointer"
+                      className="w-full glow-button flex items-center justify-center gap-2 py-2.5 px-4 text-xs sm:text-sm font-bold shadow-lg text-center cursor-pointer"
                     >
-                      <FiExternalLink size={15} />
+                      <FiExternalLink size={14} />
                       Open Live Demo
                     </a>
                   )}
@@ -390,15 +398,15 @@ const ProjectModal = ({ project, onClose }) => {
                       href={modalGithub}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 px-4 py-3 rounded-full font-bold flex items-center justify-center gap-2 transition-all text-xs sm:text-sm shadow-sm cursor-pointer"
+                      className="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 px-4 py-2.5 rounded-full font-bold flex items-center justify-center gap-2 transition-all text-xs sm:text-sm shadow-sm cursor-pointer"
                     >
-                      <FiGithub size={15} />
+                      <FiGithub size={14} />
                       Source Code
                     </a>
                   )}
                   <button
                     onClick={onClose}
-                    className="w-full py-2.5 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+                    className="w-full py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
                   >
                     Close Preview
                   </button>
@@ -410,6 +418,8 @@ const ProjectModal = ({ project, onClose }) => {
       </motion.div>
     </AnimatePresence>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : null;
 };
 
 const defaultProjects = [
