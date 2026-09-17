@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-
-const escapeHtml = (str) => {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-};
+import { 
+  escapeHtml, 
+  getAdminNotificationEmailHtml, 
+  getClientThankYouEmailHtml 
+} from '@/lib/emailTemplates';
 
 export async function POST(request) {
   try {
@@ -43,7 +39,11 @@ export async function POST(request) {
       );
     }
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    const emailUser = process.env.EMAIL_USER || 'solestyle41@gmail.com';
+    const emailPass = process.env.EMAIL_PASS || 'luvg dfjm hzau igpi';
+    const emailTo = process.env.EMAIL_TO || emailUser;
+
+    if (!emailUser || !emailPass) {
       console.warn('Email credentials not configured in environment variables');
       return NextResponse.json(
         { message: 'Message received. Email service is running in mock mode.' }
@@ -54,41 +54,66 @@ export async function POST(request) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: emailUser,
+        pass: emailPass,
       },
     });
 
-    const safeName = escapeHtml(name);
-    const safeEmail = escapeHtml(email);
-    const safeSubject = escapeHtml(subject || 'Portfolio Contact Submission');
-    const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
+    const safeName = escapeHtml(name.trim());
+    const safeEmail = escapeHtml(email.trim());
+    const safeSubject = escapeHtml(subject?.trim() || 'Portfolio Contact Submission');
+    const safeMessage = escapeHtml(message.trim());
 
-    // Send email
-    await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
+    // 1. Send Ultra-Premium Notification to Admin (Anand Kumar)
+    const adminMailPromise = transporter.sendMail({
+      from: `"Portfolio Contact Gateway" <${emailUser}>`,
       replyTo: safeEmail,
-      to: process.env.EMAIL_TO || process.env.EMAIL_USER,
-      subject: `Portfolio Contact: ${safeSubject} (from ${safeName})`,
-      html: `
-        <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; color: #333;">
-          <h2 style="color: #4F46E5; border-bottom: 2px solid #E5E7EB; padding-bottom: 8px;">
-            New Contact Form Submission
-          </h2>
-          <p><strong>Name:</strong> ${safeName}</p>
-          <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
-          <p><strong>Subject:</strong> ${safeSubject}</p>
-          <div style="background-color: #F9FAFB; border-left: 4px solid #4F46E5; padding: 15px; margin-top: 15px;">
-            <h4 style="margin-top: 0; color: #374151;">Message:</h4>
-            <p style="white-space: pre-wrap; margin-bottom: 0;">${safeMessage}</p>
-          </div>
-        </div>
-      `,
+      to: emailTo,
+      subject: `🚀 New Portfolio Inquiry: ${safeSubject} (from ${safeName})`,
+      html: getAdminNotificationEmailHtml({
+        name: safeName,
+        email: safeEmail,
+        subject: safeSubject,
+        message: safeMessage,
+      }),
     });
 
-    return NextResponse.json({ message: 'Email sent successfully' });
+    // 2. Send Ultra-Premium Confirmation Auto-Reply to Client
+    const clientFirstName = safeName.split(' ')[0] || safeName;
+    const clientMailPromise = transporter.sendMail({
+      from: `"Anand Kumar | Full Stack Developer" <${emailUser}>`,
+      replyTo: emailUser,
+      to: safeEmail,
+      subject: `✨ Thank you for reaching out, ${clientFirstName}! — Anand Kumar`,
+      html: getClientThankYouEmailHtml({
+        name: safeName,
+        email: safeEmail,
+        subject: safeSubject,
+        message: safeMessage,
+      }),
+    });
+
+    // We execute both concurrently. Ensure admin email always succeeds; client auto-reply failure shouldn't abort admin delivery.
+    const [adminResult, clientResult] = await Promise.allSettled([
+      adminMailPromise,
+      clientMailPromise,
+    ]);
+
+    if (adminResult.status === 'rejected') {
+      console.error('Admin email error:', adminResult.reason);
+      throw new Error(adminResult.reason?.message || 'Failed to deliver notification email');
+    }
+
+    if (clientResult.status === 'rejected') {
+      console.warn('Client auto-reply delivery warning:', clientResult.reason);
+    }
+
+    return NextResponse.json({ 
+      message: 'Message sent successfully! A confirmation email has also been sent to you.',
+      success: true 
+    });
   } catch (error) {
     console.error('Email error:', error);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Failed to send email' }, { status: 500 });
   }
-}
+}
