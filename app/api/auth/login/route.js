@@ -19,7 +19,10 @@ export async function POST(request) {
       );
     }
 
-    const user = await User.findOne({ username });
+    const trimmedUsername = username.trim();
+    const user = await User.findOne({ 
+      username: { $regex: new RegExp(`^${trimmedUsername}$`, 'i') } 
+    });
     console.log('User found:', !!user);
 
     if (!user) {
