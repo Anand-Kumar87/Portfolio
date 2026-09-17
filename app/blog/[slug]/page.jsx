@@ -16,18 +16,19 @@ function sanitizeHtml(html) {
     .replace(/href=["']?javascript:[^"'>]*/gi, 'href="#"');
 }
 
+import { fallbackPostsMap } from '@/lib/defaultBlogPosts';
+
 export const dynamic = 'force-dynamic';
 
 async function getPost(slug) {
   try {
     await connectDB();
     const post = await Blog.findOne({ slug, published: true }).lean();
-    if (!post) return null;
-    return JSON.parse(JSON.stringify(post));
+    if (post) return JSON.parse(JSON.stringify(post));
   } catch (error) {
     console.warn('Database connection skipped for post:', error.message);
-    return null;
   }
+  return fallbackPostsMap[slug] || null;
 }
 
 export async function generateMetadata({ params }) {

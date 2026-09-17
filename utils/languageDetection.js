@@ -10,12 +10,14 @@ import {
   SiVisualstudiocode, SiIntellijidea, SiSublimetext, SiAtom,
   SiFigma, SiSketch, SiAdobexd, SiCanva, SiBlender, SiUnity,
   SiTensorflow, SiPytorch, SiOpencv, SiJupyter, SiAnaconda,
-  SiWordpress, SiShopify, SiWix, SiSquarespace
+  SiWordpress, SiShopify, SiWix, SiSquarespace,
+  SiFlutter, SiDart, SiAndroid, SiApple
 } from 'react-icons/si';
 import { 
   FaCode, FaDatabase, FaServer, FaCloud, FaTools, FaPalette, FaBrain, FaShoppingCart,
   FaReact, FaVuejs, FaAngular, FaNodeJs, FaPython, FaJava, FaPhp, FaLaravel,
-  FaWordpress, FaShopify, FaAws, FaDocker, FaGitAlt, FaLinux, FaWindows, FaApple
+  FaWordpress, FaShopify, FaAws, FaDocker, FaGitAlt, FaLinux, FaWindows, FaApple,
+  FaMobileAlt
 } from 'react-icons/fa';
 
 export const getLanguageIcon = (language) => {
@@ -41,6 +43,13 @@ export const getLanguageIcon = (language) => {
     'rust': SiRust,
     'swift': SiSwift,
     'kotlin': SiKotlin,
+    'flutter': SiFlutter,
+    'dart': SiDart,
+    'android': SiAndroid,
+    'ios': SiApple,
+    'apple': SiApple,
+    'react native': SiReact,
+    'reactnative': SiReact,
     
     // Frontend Frameworks
     'react': SiReact,
@@ -154,7 +163,9 @@ export const getCategoryIcon = (category) => {
     'design': FaPalette,
     'ai': FaBrain,
     'ecommerce': FaShoppingCart,
-    'mobile': FaCode,
+    'mobile': FaMobileAlt,
+    'mobile development': FaMobileAlt,
+    'cross-platform': FaMobileAlt,
     'web': FaCode,
     'desktop': FaCode,
   };
@@ -168,6 +179,12 @@ export const getSkillColor = (skill) => {
     'typescript': '#3178C6',
     'python': '#3776AB',
     'java': '#007396',
+    'flutter': '#02569B',
+    'dart': '#0175C2',
+    'android': '#3DDC84',
+    'ios': '#111827',
+    'apple': '#555555',
+    'react native': '#61DAFB',
     'react': '#61DAFB',
     'vue': '#4FC08D',
     'angular': '#DD0031',

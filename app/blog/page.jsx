@@ -7,22 +7,26 @@ import Blog from '@/models/Blog';
 
 export const dynamic = 'force-dynamic';
 
+import { defaultBlogPosts } from '@/lib/defaultBlogPosts';
+
 async function getBlogPosts() {
   try {
     await connectDB();
     const posts = await Blog.find({ published: true })
       .sort({ createdAt: -1 })
       .lean();
-    return JSON.parse(JSON.stringify(posts));
+    if (posts && posts.length > 0) {
+      return JSON.parse(JSON.stringify(posts));
+    }
   } catch (error) {
     console.warn('Database connection skipped during build:', error.message);
-    return [];
   }
+  return defaultBlogPosts;
 }
 
 export const metadata = {
-  title: 'Blog - My Portfolio',
-  description: 'Read my latest articles and insights',
+  title: 'Blog - Anand Kumar | Full Stack & Flutter Developer',
+  description: 'Read technical engineering insights on Full-Stack, Flutter, and UI Architecture.',
 };
 
 export default async function BlogPage() {

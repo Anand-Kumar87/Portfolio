@@ -1,24 +1,19 @@
 'use client';
 import { motion, useAnimation } from 'framer-motion';
 import { useState } from 'react';
-import { FiMail, FiPhone, FiMapPin, FiSend, FiCheck } from 'react-icons/fi';
+import { FiMail, FiPhone, FiMapPin, FiSend, FiCheck, FiCopy } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 const FloatingInput = ({ label, type = 'text', value, onChange, required = false }) => {
   const [focused, setFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(false);
-
-  const handleChange = (e) => {
-    onChange(e);
-    setHasValue(e.target.value.length > 0);
-  };
+  const hasValue = Boolean(value && String(value).trim().length > 0);
 
   return (
     <div className="relative mb-6">
       <motion.input
         type={type}
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         required={required}
@@ -41,18 +36,13 @@ const FloatingInput = ({ label, type = 'text', value, onChange, required = false
 
 const FloatingTextarea = ({ label, value, onChange, required = false }) => {
   const [focused, setFocused] = useState(false);
-  const [hasValue, setHasValue] = useState(false);
-
-  const handleChange = (e) => {
-    onChange(e);
-    setHasValue(e.target.value.length > 0);
-  };
+  const hasValue = Boolean(value && String(value).trim().length > 0);
 
   return (
     <div className="relative mb-6">
       <motion.textarea
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         required={required}
@@ -83,7 +73,17 @@ export default function EnhancedContact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [copiedKey, setCopiedKey] = useState(null);
   const controls = useAnimation();
+
+  const handleCopy = (text, key) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      toast.success(`Copied ${key} to clipboard!`);
+      setTimeout(() => setCopiedKey(null), 2000);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,16 +98,20 @@ export default function EnhancedContact() {
 
       if (response.ok) {
         setIsSubmitted(true);
-        toast.success('Message sent successfully!');
+        toast.success('Message sent! An automated confirmation email was sent to your inbox.', {
+          duration: 5000,
+          icon: '🚀'
+        });
         setFormData({ name: '', email: '', subject: '', message: '' });
         
         // Reset success state after 3 seconds
         setTimeout(() => setIsSubmitted(false), 3000);
       } else {
-        toast.error('Failed to send message');
+        const errData = await response.json().catch(() => ({}));
+        toast.error(errData.error || 'Failed to send message');
       }
     } catch (error) {
-      toast.error('An error occurred');
+      toast.error('An error occurred: ' + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -118,13 +122,15 @@ export default function EnhancedContact() {
       icon: FiMail,
       label: 'Email',
       value: 'solestyle41@gmail.com',
-      href: 'mailto:solestyle41@gmail.com'
+      href: 'mailto:solestyle41@gmail.com',
+      copyable: true
     },
     {
       icon: FiPhone,
       label: 'Phone',
       value: '+91 8726540277',
-      href: 'tel:+918726540277'
+      href: 'tel:+918726540277',
+      copyable: true
     },
     {
       icon: FiMapPin,
@@ -135,14 +141,17 @@ export default function EnhancedContact() {
   ];
 
   return (
-    <section id="contact" className="pt-20 pb-10 sm:pb-12">
-      <div className="container mx-auto px-6">
+    <section id="contact" className="py-20 px-4 relative overflow-hidden">
+      <div className="container mx-auto max-w-7xl relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold mb-4">Get In Touch</h2>
+          <h2 className="text-4xl sm:text-5xl font-extrabold mb-4">
+            Get in <span className="gradient-text">Touch</span>
+          </h2>
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Have a project in mind? Let's discuss how we can work together to bring your ideas to life.
           </p>
@@ -159,23 +168,47 @@ export default function EnhancedContact() {
             
             <div className="space-y-5 mb-8">
               {contactInfo.map((info, index) => (
-                <motion.a
+                <motion.div
                   key={index}
-                  href={info.href}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
-                  whileHover={{ x: 10 }}
-                  className="flex items-center gap-4 p-4 glass dark:glass-dark rounded-xl hover:shadow-lg transition-all group"
+                  whileHover={{ x: 6 }}
+                  className="flex items-center justify-between p-4 glass dark:glass-dark rounded-xl hover:shadow-lg transition-all group border border-white/5"
                 >
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                    <info.icon size={20} />
-                  </div>
-                  <div>
-                    <p className="font-medium">{info.label}</p>
-                    <p className="text-gray-600 dark:text-gray-300">{info.value}</p>
-                  </div>
-                </motion.a>
+                  <a
+                    href={info.href}
+                    className="flex items-center gap-4 flex-1 min-w-0"
+                  >
+                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      <info.icon size={20} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{info.label}</p>
+                      <p className="text-gray-900 dark:text-gray-100 font-semibold truncate">{info.value}</p>
+                    </div>
+                  </a>
+
+                  {info.copyable && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleCopy(info.value, info.label);
+                      }}
+                      title={`Copy ${info.label}`}
+                      aria-label={`Copy ${info.label}`}
+                      className="p-2.5 rounded-lg ml-2 bg-gray-100 dark:bg-white/5 hover:bg-blue-500/20 text-gray-600 dark:text-gray-300 hover:text-blue-400 transition-colors border border-transparent hover:border-blue-500/30"
+                    >
+                      {copiedKey === info.label ? (
+                        <FiCheck className="w-4 h-4 text-emerald-400" />
+                      ) : (
+                        <FiCopy className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
+                </motion.div>
               ))}
             </div>
 

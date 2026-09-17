@@ -414,6 +414,19 @@ const ProjectModal = ({ project, onClose }) => {
 
 const defaultProjects = [
   {
+    _id: 'default-pulsefit',
+    title: 'PulseFit - Cross-Platform Fitness Suite',
+    description: 'High-performance 60fps mobile application built with Flutter & Dart. Features real-time GPS telemetry, offline-first SQLite sync, BLoC state architecture, Firebase push notifications, and custom Impeller canvas charts.',
+    image: '/images/projects/pulsefit-mobile.png',
+    technologies: ['Flutter', 'Dart', 'Firebase', 'BLoC', 'Android', 'iOS'],
+    techStack: ['Flutter', 'Dart', 'Firebase', 'BLoC', 'Android', 'iOS'],
+    category: 'Mobile App',
+    status: 'Completed',
+    liveUrl: 'https://github.com/Anand-Kumar87',
+    githubUrl: 'https://github.com/Anand-Kumar87',
+    features: ['Clean Architecture with BLoC', '60FPS Native Impeller Animations', 'Offline-First SQLite Cache', 'Firebase Cloud Sync & Auth']
+  },
+  {
     _id: 'default-inv',
     title: 'Invoice Generator App',
     description: 'A modern cloud-based invoice management platform featuring instant PDF generation, client accounting, automated balance calculations, and multi-currency formats.',
@@ -467,7 +480,12 @@ export default function ProjectGallery() {
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          setProjects(data);
+          const hasMobile = data.some(p => (p.category || '').toLowerCase().includes('mobile') || (p.title || '').includes('PulseFit'));
+          if (!hasMobile) {
+            setProjects([defaultProjects[0], ...data]);
+          } else {
+            setProjects(data);
+          }
         }
       })
       .catch(() => {});

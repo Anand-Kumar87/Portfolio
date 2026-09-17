@@ -159,8 +159,12 @@ export default function ModernNavbar() {
               whileTap={{ scale: 0.96 }}
               className="flex items-center gap-3 cursor-pointer group"
             >
-              <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:shadow-blue-500/40 transition-all">
-                <span className="text-white font-bold text-base tracking-wider">AK</span>
+              <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-blue-500/25 group-hover:shadow-cyan-500/40 border border-cyan-400/40 group-hover:border-cyan-400/80 transition-all p-0.5 bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900">
+                <img
+                  src="/icon.png"
+                  alt="Anand Kumar Monogram"
+                  className="w-full h-full object-cover rounded-[10px]"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold gradient-text tracking-tight">Anand Kumar</span>
@@ -382,8 +386,12 @@ export default function ModernNavbar() {
             {/* Drawer Header */}
             <div className="p-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
-                  <span className="text-white font-bold text-sm">AK</span>
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden shadow-md border border-cyan-400/40 p-0.5 bg-gradient-to-tr from-slate-900 via-indigo-950 to-slate-900">
+                  <img
+                    src="/icon.png"
+                    alt="Anand Kumar Monogram"
+                    className="w-full h-full object-cover rounded-[10px]"
+                  />
                 </div>
                 <div>
                   <span className="font-bold gradient-text text-base block">Anand Kumar</span>

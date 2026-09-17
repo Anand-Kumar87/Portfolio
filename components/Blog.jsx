@@ -1,46 +1,13 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import GlassCard from './GlassCard';
 import { FiClock, FiArrowRight } from 'react-icons/fi';
 import { formatDate, calculateReadingTime, truncate } from '@/lib/utils';
-import Link from 'next/link';
+import { defaultBlogPosts } from '@/lib/defaultBlogPosts';
 
-const defaultPosts = [
-  {
-    _id: 'post-1',
-    title: 'Architecting Scalable Web Applications with Next.js & MongoDB',
-    slug: 'architecting-scalable-web-applications',
-    content: 'Discover modern patterns for App Router, server actions, and efficient database indexing to deliver blazing-fast web experiences.',
-    excerpt: 'Key strategies for structuring full-stack web applications with Next.js App Router, server actions, and MongoDB optimization.',
-    coverImage: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop',
-    tags: ['Next.js', 'React', 'MongoDB', 'Architecture'],
-    createdAt: '2024-03-15T10:00:00.000Z',
-    published: true,
-  },
-  {
-    _id: 'post-2',
-    title: 'Mastering Fluid Micro-Interactions with Framer Motion & Tailwind',
-    slug: 'fluid-micro-interactions-framer-motion',
-    content: 'Learn how to elevate UI design with physics-based springs, gesture tracking, and glassmorphism without compromising on 60fps performance.',
-    excerpt: 'Step-by-step techniques to bring web apps to life using Framer Motion springs, layout animations, and glassmorphism.',
-    coverImage: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop',
-    tags: ['UI/UX', 'Framer Motion', 'Tailwind CSS', 'Design'],
-    createdAt: '2024-02-28T10:00:00.000Z',
-    published: true,
-  },
-  {
-    _id: 'post-3',
-    title: 'Building AI-Powered Dashboards: From Concept to Production',
-    slug: 'building-ai-powered-dashboards',
-    content: 'An in-depth walkthrough on integrating LLM insights, real-time analytics, and secure client-side state in production fintech dashboards.',
-    excerpt: 'How to design and deploy AI-driven financial analytics tools with real-time charts, intelligent budgeting, and automated reporting.',
-    coverImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
-    tags: ['AI', 'Analytics', 'Fintech', 'Full-Stack'],
-    createdAt: '2024-01-20T10:00:00.000Z',
-    published: true,
-  },
-];
+const defaultPosts = defaultBlogPosts;
 
 export default function Blog() {
   const [posts, setPosts] = useState(defaultPosts);

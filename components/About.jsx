@@ -13,7 +13,8 @@ import {
   FiServer,
   FiZap,
   FiMapPin,
-  FiAward
+  FiAward,
+  FiSmartphone
 } from 'react-icons/fi';
 
 export default function About() {
@@ -27,42 +28,43 @@ export default function About() {
   }, []);
 
   const metrics = [
-    { value: '3+', label: 'Years Experience', subtext: 'Full-Cycle Engineering' },
-    { value: '30+', label: 'Projects Shipped', subtext: 'Web Apps & Portals' },
+    { value: '3+', label: 'Years Experience', subtext: 'Mobile & Full-Stack' },
+    { value: '30+', label: 'Projects Shipped', subtext: 'Flutter & Web Apps' },
     { value: '99.9%', label: 'Uptime & Reliability', subtext: 'Production Deployments' },
     { value: '100%', label: 'Client Satisfaction', subtext: 'Agile & On-Time Delivery' },
   ];
 
   const pillars = [
     {
+      icon: FiSmartphone,
+      title: 'Flutter & Mobile Engineering',
+      desc: 'Crafting pixel-perfect, 60fps iOS and Android applications with Flutter, Dart, BLoC/Riverpod, Impeller rendering, and native platform channels.',
+      badge: 'Mobile Core'
+    },
+    {
       icon: FiServer,
-      title: 'Full-Stack Architecture',
-      desc: 'Architecting robust, end-to-end web applications with Next.js, Node.js, Express, and modern RESTful APIs.',
-      badge: 'Architecture'
+      title: 'Full-Stack Web Architecture',
+      desc: 'Architecting robust, end-to-end web applications with Next.js 14, React, Node.js, Express, and modern RESTful APIs.',
+      badge: 'Web Architecture'
     },
     {
       icon: FiDatabase,
       title: 'Databases & Cloud Logic',
-      desc: 'Designing scalable schemas and high-throughput data operations with MongoDB, PostgreSQL, and Redis caching.',
+      desc: 'Designing scalable schemas and high-throughput data operations with MongoDB, PostgreSQL, Firebase Cloud, and Redis caching.',
       badge: 'Data & Cloud'
     },
     {
-      icon: FiZap,
-      title: 'High-Performance UI/UX',
-      desc: 'Building sub-second, 60fps responsive user experiences powered by Tailwind CSS, React, and motion physics.',
-      badge: 'Performance'
-    },
-    {
       icon: FiShield,
-      title: 'Security & DevOps',
-      desc: 'Hardened authentication (JWT, OAuth), Docker containerization, CI/CD pipelines, and secure API gateways.',
-      badge: 'Security'
+      title: 'Hardened Security & DevOps',
+      desc: 'Z+ hardened authentication (JWT, OAuth, bcrypt), Docker containerization, CI/CD pipelines, and secure API gateways.',
+      badge: 'Security & DevOps'
     }
   ];
 
   const coreTags = [
-    'Next.js 14', 'React 18', 'Node.js', 'Express', 'MongoDB', 
-    'PostgreSQL', 'Docker', 'REST APIs', 'Tailwind CSS', 'TypeScript', 'Git'
+    'Flutter', 'Dart', 'BLoC / Riverpod', 'Next.js 14', 'React 18', 
+    'Node.js', 'Express', 'Firebase', 'MongoDB', 'PostgreSQL', 
+    'Docker', 'REST APIs', 'Tailwind CSS', 'TypeScript'
   ];
 
   return (
@@ -130,10 +132,10 @@ export default function About() {
                   Engineering Software That Matters
                 </h3>
                 <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
-                  I am a Full-Stack Software Engineer with a deep passion for building resilient web applications, developer tools, and data-driven dashboards. Whether optimizing database queries, architecting multi-tier cloud services, or crafting high-converting frontend interfaces, I focus on performance, scalability, and clean maintainable code.
+                  I am a Senior Mobile & Full-Stack Software Engineer with a deep passion for building resilient cross-platform Flutter applications (iOS & Android) and high-throughput web systems. Whether tuning 60fps Impeller widget trees, designing multi-tier cloud backends, or crafting fluid responsive interfaces, I focus on performance, scalability, and clean maintainable code.
                 </p>
                 <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-                  My work spans across full-featured fintech tools like <strong className="text-slate-900 dark:text-white font-semibold">Invoice Generator</strong>, high-performance retail portals like <strong className="text-slate-900 dark:text-white font-semibold">ShoeStyle E-Commerce</strong>, and intelligent financial tracking platforms like <strong className="text-slate-900 dark:text-white font-semibold">Nexus Finance</strong>.
+                  My portfolio features production-grade apps including cross-platform mobile suites, fintech utilities like <strong className="text-slate-900 dark:text-white font-semibold">Invoice Generator</strong>, high-performance retail portals like <strong className="text-slate-900 dark:text-white font-semibold">ShoeStyle E-Commerce</strong>, and intelligent financial tracking platforms like <strong className="text-slate-900 dark:text-white font-semibold">Nexus Finance</strong>.
                 </p>
               </div>
 

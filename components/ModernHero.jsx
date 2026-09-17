@@ -70,25 +70,34 @@ export default function ModernHero() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   useEffect(() => {
+    const defaultFallbackSkills = [
+      { _id: 'flutter', name: 'Flutter', level: 95 },
+      { _id: 'dart', name: 'Dart', level: 92 },
+      { _id: 'react', name: 'React', level: 95 },
+      { _id: 'nextjs', name: 'Next.js', level: 92 },
+      { _id: 'nodejs', name: 'Node.js', level: 88 },
+      { _id: 'firebase', name: 'Firebase', level: 90 }
+    ];
+
     Promise.all([
       fetch('/api/about').then(res => res.json()),
       fetch('/api/skills').then(res => res.json())
     ]).then(([about, skillsData]) => {
       setAboutData(about);
-      const skillsArray = Array.isArray(skillsData) ? skillsData : [];
+      const skillsArray = Array.isArray(skillsData) && skillsData.length > 0 ? skillsData : defaultFallbackSkills;
       setSkills(skillsArray.slice(0, 6));
     }).catch(() => {
       setAboutData({});
-      setSkills([]);
+      setSkills(defaultFallbackSkills);
     });
   }, []);
 
   const professions = [
-    'Full-Stack Developer',
-    'UI/UX Designer', 
-    'Cloud Architect',
-    'DevOps Engineer',
-    'Mobile Developer'
+    'Senior Flutter Developer',
+    'Full-Stack Web Architect', 
+    'Cross-Platform Mobile Engineer',
+    'Next.js & Node.js Developer',
+    'Mobile UI/UX Specialist'
   ];
 
   return (
