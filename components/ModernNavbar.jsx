@@ -26,7 +26,7 @@ const NavLink = ({ href, children, onClick, mobile = false }) => (
     whileTap={{ scale: 0.96 }}
     className={`relative group cursor-pointer ${
       mobile 
-        ? 'block py-3 px-4 text-base font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-colors text-slate-800 dark:text-slate-200'
+        ? 'block py-2 px-3.5 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-800 dark:text-slate-200'
         : 'px-3.5 py-2 text-sm font-semibold transition-colors text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400'
     }`}
   >
@@ -85,7 +85,6 @@ export default function ModernNavbar() {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
     } else {
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
@@ -122,10 +121,15 @@ export default function ModernNavbar() {
   const handleNavClick = (href) => {
     setIsOpen(false);
     setIsProfileOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.body.style.overflow = '';
+    document.body.style.touchAction = '';
+
+    setTimeout(() => {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 60);
   };
 
   if (!mounted) return null;
@@ -372,7 +376,8 @@ export default function ModernNavbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-y-0 right-0 w-80 max-w-[85vw] h-[100dvh] max-h-[100dvh] bg-white dark:bg-[#0f172a] z-50 lg:hidden border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl overflow-hidden"
+            className="fixed top-0 bottom-0 right-0 w-80 max-w-[85vw] h-full bg-white dark:bg-[#0f172a] z-50 lg:hidden border-l border-slate-200 dark:border-slate-800 flex flex-col shadow-2xl overflow-hidden"
+            style={{ touchAction: 'pan-y' }}
           >
             {/* Drawer Header */}
             <div className="p-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
@@ -401,8 +406,8 @@ export default function ModernNavbar() {
 
             {/* Drawer Scrollable Body */}
             <div 
-              className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5 space-y-6 pb-28 touch-pan-y"
-              style={{ WebkitOverflowScrolling: 'touch' }}
+              className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-4 pb-36"
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
             >
               {/* Navigation Links */}
               <div>
@@ -544,6 +549,7 @@ export default function ModernNavbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
+            onTouchStart={() => setIsOpen(false)}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           />
         )}

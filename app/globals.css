@@ -21,7 +21,8 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: clip;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -31,7 +32,8 @@ body {
   @apply min-h-screen;
   @apply transition-colors duration-500;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  overflow-x: clip;
+  overflow-x: hidden;
+  width: 100%;
   position: relative;
   -webkit-overflow-scrolling: touch;
 }

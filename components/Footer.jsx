@@ -39,7 +39,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative border-t border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-[#0b1120]/90 backdrop-blur-xl pt-10 pb-16 overflow-hidden">
+    <footer className="relative border-t border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-[#0b1120]/90 backdrop-blur-xl pt-10 pb-32 sm:pb-20">
       {/* Subtle Background Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-24 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 blur-3xl pointer-events-none" />
 
