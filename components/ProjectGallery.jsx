@@ -80,7 +80,7 @@ const ProjectCard = ({ project, index, onSelect }) => {
             </span>
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons h*/}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
